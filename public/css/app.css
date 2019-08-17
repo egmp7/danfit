@@ -10648,6 +10648,15 @@ a.text-dark:focus {
   font-family: "Lexend Deca", sans-serif;
 }
 
+* h2 {
+  font-size: 24px;
+  text-align: center;
+}
+
+* .alert {
+  margin: 20px 0;
+}
+
 #navbar img {
   width: 100px;
   margin: 8px 0;
@@ -10684,8 +10693,17 @@ a.text-dark:focus {
   margin: 10px 0;
 }
 
+#user .col-3 {
+  padding-right: 0;
+}
+
 #user img {
-  width: 100%;
+  width: 22vw;
+  height: 22vw;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 50%;
+  border: solid #c3c3c3 4px;
 }
 
 #user .user-info p {
@@ -10755,5 +10773,38 @@ a.text-dark:focus {
   transform: translateY(-50%) translateX(-50%);
   font-size: 24px;
   margin: 0;
+}
+
+/************************************************
+    CONFIG
+************************************************/
+
+#config img {
+  display: block;
+  width: 200px;
+  height: 200px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 50%;
+  margin: 20px auto;
+  border: solid #c3c3c3 5px;
+}
+
+#config p {
+  text-align: center;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+#config .wrap {
+  position: relative;
+}
+
+#config .wrap .file {
+  position: absolute;
+  top: 0;
+  height: 45px;
+  width: 100%;
+  opacity: 0;
 }
 

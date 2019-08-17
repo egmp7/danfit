@@ -1,7 +1,7 @@
 <div id="navbar">
     <img src="{{ asset('img/logo.png') }}" alt="DanFitCenter_logo">
     <div class="menu">
-        <a href="/">
+        <a href="/dashboard">
             <div class="element">
                 <i class="fas fa-tachometer-alt fa-2x"></i>
                 <p>DASHBOARD</p>
@@ -31,5 +31,11 @@
             <i class="fab fa-facebook-square fa-2x"></i>
             <p>AYUDA</p>
         </div>
+        <a href="/configuracion">
+            <div class="element">
+                <i class="fas fa-cogs fa-2x"></i>
+                <p>CONFIG</p>
+            </div>
+        </a>
     </div>
 </div>

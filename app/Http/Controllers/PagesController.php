@@ -3,16 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class PagesController extends Controller
 {
-    public function getDashboard(){
-        return view('dashboard');
+    //Autenticacion
+    public function __construct()
+    {
+    $this->middleware('auth');
     }
+    
+    //Pages
     public function getPrograma(){
-        return view('programa');
+        return view('app.programa');
     }
     public function getCalendario(){
-        return view('calendario');
+        return view('app.calendario');
     }
+    public function getConfig(){
+        $user = Auth::user();
+
+        return view('app.config')->with('user',$user);
+    }        
 }

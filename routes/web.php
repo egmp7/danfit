@@ -11,10 +11,28 @@
 |
 */
 
-Route::get('/', 'PagesController@getDashboard');
 
 Route::get('/programa', 'PagesController@getPrograma');
 
 Route::get('/calendario', 'PagesController@getCalendario');
 
+Route::get('/configuracion', 'PagesController@getConfig');
 
+
+
+Auth::routes(['register' => false]);
+
+Route::get('/dashboard', 'DashboardController@index');
+
+
+
+Route::resource('config','ConfigController');
+
+Route::resource('workout','WorkoutController');
+
+
+//NOT AUTH
+
+Route::get('/', function () {
+    return view('home');
+});

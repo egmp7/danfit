@@ -6,11 +6,11 @@
 <div id="user">
     <div class="row align-items-center">
         <div class="col-3">
-            <img src="{{asset('img/me.jpg')}}" alt="user_img">
+            <img src="storage/user_image/{{$user->user_image}}" alt="user_img">
         </div>
         <div class="col-9">
             <div class="user-info">
-                <p>Erick Gonzalez</p>
+            <p>{{$user->name}}</p>
                 <div class="progress">
                     <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%"
                         aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"><span>Progreso Completado</span></div>

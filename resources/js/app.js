@@ -19,7 +19,30 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('navbar', require('./components/inc/Navbar.vue').default);
+
+/**
+ * Import ROUTER
+ */
+
+
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+
+Vue.use(VueRouter)
+   
+const routes = [
+    { path: '/', component: require('./components/User.vue').default},
+    { path: '/tipo', component: require('./components/Tipo.vue').default },
+    { path: '/calendario', component: require('./components/Calendario.vue').default },
+    { path: '/configuracion', component: require('./components/Configuracion.vue').default }
+
+
+  ]
+
+const router = new VueRouter({
+  routes // short for `routes: routes`
+})  
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -29,4 +52,5 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
+    router
 });

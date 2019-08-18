@@ -10,9 +10,6 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
     {{-- Google Fonts --}}
     <link href="https://fonts.googleapis.com/css?family=Lexend+Deca&display=swap" rel="stylesheet">
 
@@ -25,7 +22,7 @@
 </head>
 <body>
     <div class="container">
-        @include('inc.navbar')
+        {{-- @include('inc.navbar') --}}
         @include ('inc.messages')
 
         @yield('content')
@@ -36,5 +33,7 @@
         
     </div>
 </body>
+<script src="{{asset('js/app.js')}}"></script>
+
 </html>
 

@@ -25,9 +25,8 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
                 
-        return view('app.dashboard')->with('user',$user);
+        return view('app.dashboard');
     }
     
 }

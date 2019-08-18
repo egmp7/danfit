@@ -1,24 +1,25 @@
+<template>
 <div id="navbar">
-    <img src="{{ asset('img/logo.png') }}" alt="DanFitCenter_logo">
+    <img src="/img/logo.png" alt="DanFitCenter_logo">
     <div class="menu">
-        <a href="/dashboard">
+        <router-link to="/">
             <div class="element">
                 <i class="fas fa-tachometer-alt fa-2x"></i>
                 <p>DASHBOARD</p>
             </div>
-        </a>
-        <a href="/programa">
+        </router-link>
+        <router-link to="/tipo">
             <div class="element">
                 <i class="fas fa-dumbbell fa-2x"></i>
                 <p>PROGRAMA</p>
             </div>
-        </a>
-        <a href="/calendario">
+        </router-link>
+        <router-link to="/calendario">
             <div class="element">
                 <i class="fas fa-calendar-alt fa-2x"></i>
                 <p>CALENDARIO</p>
             </div>
-        </a>
+        </router-link>
         <div class="element">
             <i class="fas fa-utensils fa-2x"></i>
             <p>NUTRICIÓN</p>
@@ -31,11 +32,12 @@
             <i class="fab fa-facebook-square fa-2x"></i>
             <p>AYUDA</p>
         </div>
-        <a href="/configuracion">
+        <router-link to="/configuracion">
             <div class="element">
                 <i class="fas fa-cogs fa-2x"></i>
                 <p>CONFIG</p>
             </div>
-        </a>
+        </router-link>
     </div>
 </div>
+</template>

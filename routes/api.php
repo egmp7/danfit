@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Resources\Data as DataResource;
+
+use App\User;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +20,10 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('user_data','DataController@index');
+
+Route::post('user_data','DataController@store');
+
+Route::get('workouts','DataController@dataWorkouts');
+

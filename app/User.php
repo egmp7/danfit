@@ -36,4 +36,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function progress()
+    {
+        return $this->hasMany('App\User_progress');
+    }
+
+
 }

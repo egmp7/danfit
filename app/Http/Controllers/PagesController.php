@@ -15,12 +15,7 @@ class PagesController extends Controller
     }
     
     //Pages
-    public function getPrograma(){
-        return view('app.programa');
-    }
-    public function getCalendario(){
-        return view('app.calendario');
-    }
+    
     public function getConfig(){
         $user = Auth::user();
 

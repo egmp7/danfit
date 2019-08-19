@@ -4,11 +4,11 @@
     <div id="user">
       <div class="row align-items-center">
         <div class="col-3">
-          <img src="storage/user_image/" alt="user_img" />
+          <img v-bind:src="'../storage/user_image/'+user.user_image" alt="user_img" />
         </div>
         <div class="col-9">
           <div class="user-info">
-            <p>USER NAME</p>
+            <p>{{user.name}}</p>
             <div class="progress">
               <div
                 class="progress-bar progress-bar-striped"
@@ -46,3 +46,42 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      user: {
+      },
+      workouts:{}
+    };
+  },
+  created() {
+    this.fetchUser();
+    this.fetchWorkouts();
+    this.userId();
+  },
+  methods: {
+    fetchUser() {
+      fetch("../api/user_data/"+this.userId())
+        .then(res => res.json())
+        .then(res => {
+          this.user = res.data;
+          console.log(this.user);
+        });
+    },
+    fetchWorkouts() {
+      fetch("../api/workouts/")
+        .then(res => res.json())
+        .then(res => {
+          this.workouts = res.data;
+          console.log(this.workouts);
+        });
+    },
+    userId() {
+      var id = window.location.pathname.slice(11);
+      return id
+    }
+  }
+};
+</script>

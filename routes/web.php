@@ -12,16 +12,18 @@
 */
 
 
-// DELETE THIS
-Route::get('/configuracion', 'PagesController@getConfig');
+
 
 Auth::routes(['register' => false]);
+
+
 Route::get('/dashboard', 'DashboardController@index');
+Route::get('/dashboard/{id}', 'DashboardController@view');
 
-
+// DELETE THIS
 Route::resource('config','ConfigController');
-
 Route::resource('workout','WorkoutController');
+Route::get('/configuracion', 'PagesController@getConfig');
 
 
 

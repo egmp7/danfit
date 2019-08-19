@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 use Illumintate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\User;
 
 class DashboardController extends Controller
 {
@@ -23,8 +22,24 @@ class DashboardController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {           
-        return view('app.dashboard');
+    {   
+        //If Autenticated, redirect to proper url
+        $id = Auth::id();
+        return redirect('dashboard/'.$id);
     }
-    
+
+    public function view()
+    {   
+        // My Authentication with url
+        $id = Auth::id();
+        $id_url = $_SERVER['REQUEST_URI']; 
+        $id_url = substr($id_url,11,12);
+        
+        if($id == $id_url){
+            return view('app.dashboard');
+        }
+        else{
+            return redirect('dashboard');
+        }
+    }
 }

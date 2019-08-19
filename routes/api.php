@@ -19,10 +19,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-
 Route::get('user_data/{id}','ApiController@showUser');
 
 Route::post('user_data/{id}','ApiController@saveProgress');
 
 Route::get('workouts','ApiController@showWorkouts');
+
 

@@ -4,10 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
+//Models
+use App\Workout;
+use App\User_progress;
 use App\User;
+
+
+
+//Resources
+use App\Http\Resources\Data as DataResource;
+use App\Http\Resources\Workout as WorkoutResource;
 
 class ConfigController extends Controller
 {
+    
+
+
     /**
      * Display a listing of the resource.
      *
@@ -90,17 +103,7 @@ class ConfigController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+    
 
     /**
      * Remove the specified resource from storage.

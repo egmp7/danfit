@@ -23,11 +23,7 @@ class DashboardController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
-        $user = User::find(1)->progress;
-
-        echo $user;
-                
+    {           
         return view('app.dashboard');
     }
     

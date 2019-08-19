@@ -1,9 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Resources\Data as DataResource;
-
-use App\User;
 
 
 /*
@@ -21,9 +18,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('user_data','DataController@index');
 
-Route::post('user_data','DataController@store');
 
-Route::get('workouts','DataController@dataWorkouts');
+Route::get('user_data/{id}','ApiController@showUser');
+
+Route::post('user_data/{id}','ApiController@saveProgress');
+
+Route::get('workouts','ApiController@showWorkouts');
 

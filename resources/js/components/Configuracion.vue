@@ -12,6 +12,12 @@
 
     <br />
     <br />
+    <a
+      class="dropdown-item"
+      href="/logout"
+      onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+    ><button class="btn btn-danger btn-lg btn-block">Logout</button>
+    </a>
 
     <!-- <a
       class="dropdown-item"

@@ -37046,7 +37046,24 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("br"),
       _vm._v(" "),
-      _c("br")
+      _c("br"),
+      _vm._v(" "),
+      _c(
+        "a",
+        {
+          staticClass: "dropdown-item",
+          attrs: {
+            href: "/logout",
+            onclick:
+              "event.preventDefault(); document.getElementById('logout-form').submit();"
+          }
+        },
+        [
+          _c("button", { staticClass: "btn btn-danger btn-lg btn-block" }, [
+            _vm._v("Logout")
+          ])
+        ]
+      )
     ])
   }
 ]

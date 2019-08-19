@@ -23,8 +23,6 @@ Route::resource('config','ConfigController');
 
 Route::resource('workout','WorkoutController');
 
-Route::resource('test','DataController');
-
 
 
 //  NOT AUTH

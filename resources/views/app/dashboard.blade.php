@@ -4,7 +4,7 @@
 
 <div id="app">
     <navbar></navbar>
-    <router-view></router-view>
+    <app></app>
 </div>
 
 @endsection

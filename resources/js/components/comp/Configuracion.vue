@@ -1,7 +1,7 @@
 <template>
   <div id="config">
-    <img src alt="User Image" />
-    <p>USER NAME</p>
+    <img v-bind:src="'../storage/user_image/'+user.user_image" alt="User Image" />
+    <p>{{user.name}}</p>
 
     <div class="form-group">
       <div class="wrap">
@@ -29,3 +29,10 @@
     </a> -->
   </div>
 </template>
+
+<script>
+export default {
+  name: "Configuracion",
+  props:["user"]
+}
+</script>

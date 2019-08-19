@@ -20,6 +20,8 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 Vue.component('navbar', require('./components/inc/Navbar.vue').default);
+Vue.component('app', require('./components/App.vue').default);
+
 
 /**
  * Import ROUTER
@@ -32,11 +34,10 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
    
 const routes = [
-    { path: '/', component: require('./components/User.vue').default},
-    { path: '/tipo', component: require('./components/Tipo.vue').default },
-    { path: '/calendario', component: require('./components/Calendario.vue').default },
-    { path: '/configuracion', component: require('./components/Configuracion.vue').default }
-
+    { path: '/', component: require('./components/comp/User.vue').default},
+    { path: '/tipo', component: require('./components/comp/Tipo.vue').default },
+    { path: '/calendario', component: require('./components/comp/Calendario.vue').default },
+    { path: '/configuracion', component: require('./components/comp/Configuracion.vue').default }
 
   ]
 

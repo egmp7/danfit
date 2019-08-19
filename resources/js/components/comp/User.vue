@@ -29,7 +29,7 @@
     <!-- TODAY'S WORKOUT -->
     <div id="today">
       <h2>WORKOUT DEL DÍA</h2>
-      <img src="img/workout.jpg" alt="Workout del dia" />
+      <img src="/../img/workout.jpg" alt="Workout del dia" />
       <h3>NOMBRE DEL WORKOUT</h3>
       <div class="row">
         <div class="col-md-8">
@@ -49,39 +49,7 @@
 
 <script>
 export default {
-  data() {
-    return {
-      user: {
-      },
-      workouts:{}
-    };
-  },
-  created() {
-    this.fetchUser();
-    this.fetchWorkouts();
-    this.userId();
-  },
-  methods: {
-    fetchUser() {
-      fetch("../api/user_data/"+this.userId())
-        .then(res => res.json())
-        .then(res => {
-          this.user = res.data;
-          console.log(this.user);
-        });
-    },
-    fetchWorkouts() {
-      fetch("../api/workouts/")
-        .then(res => res.json())
-        .then(res => {
-          this.workouts = res.data;
-          console.log(this.workouts);
-        });
-    },
-    userId() {
-      var id = window.location.pathname.slice(11);
-      return id
-    }
-  }
+  name:"User",
+  props:["user"]
 };
 </script>

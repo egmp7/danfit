@@ -30,13 +30,18 @@
     <div id="today">
       <h2>WORKOUT DEL DÍA</h2>
       <img src="/../img/workout.jpg" alt="Workout del dia" />
-      <h3>{{workouts[0].name}}</h3>
+      <h3>{{workOutInfo.name}}</h3>
       <div class="row">
         <div class="col-md-8">
-          <p>{{workouts[0].description}}</p>
+          <p>{{workOutInfo.description}}</p>
         </div>
         <div class="col-md-4">
-          <button class="btn btn-primary btn-lg btn-block">Empezar</button>
+          <router-link to="/workout">
+            <button
+              class="btn btn-primary btn-lg btn-block"
+              @click="$emit('setWorkoutData',workOutInfo.workout)"
+            >Empezar</button>
+          </router-link>
         </div>
       </div>
     </div>
@@ -48,25 +53,35 @@ export default {
   data() {
     return {
       progressBarData: [],
+      workOutInfo: []
     };
   },
-  //name: "User",
-  props: ["user", "workouts", "nWorkout"],
+  name: "User",
+  props: ["user", "workouts", "nWorkout", "workOutData"],
   created() {
-    this.progressBar(this.user.progress, this.nWorkout);
+    this.getProgressBar(this.user.progress, this.nWorkout);
+    this.getWorkOut();
   },
   methods: {
-    progressBar(progress, nWorkout) {
+    getProgressBar(progress, nWorkout) {
       let counter = 0;
       progress.map(x => {
-        if (
-          x.month == nWorkout.month &&
-          x.type == nWorkout.type
-        ) {
+        if (x.month == nWorkout.month && x.type == nWorkout.type) {
           counter++;
         }
       });
       this.progressBarData = (counter / 28) * 100;
+    },
+    getWorkOut() {
+      this.workouts.map(x => {
+        if (
+          x.type == this.nWorkout.type &&
+          x.month == this.nWorkout.month &&
+          x.day == this.nWorkout.day
+        ) {
+          this.workOutInfo = x;
+        }
+      });
     }
   }
 };

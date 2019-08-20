@@ -37,7 +37,9 @@ const routes = [
     { path: '/', component: require('./components/comp/User.vue').default},
     { path: '/tipo', component: require('./components/comp/Tipo.vue').default },
     { path: '/calendario', component: require('./components/comp/Calendario.vue').default },
-    { path: '/configuracion', component: require('./components/comp/Configuracion.vue').default }
+    { path: '/configuracion', component: require('./components/comp/Configuracion.vue').default },
+    { path: '/workout', component: require('./components/comp/Workout.vue').default }
+
 
   ]
 

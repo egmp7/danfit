@@ -1,5 +1,11 @@
 <template>
-  <router-view v-bind:user="user" v-bind:workouts="workouts" v-bind:nWorkout="nWorkout"></router-view>
+  <router-view
+    v-bind:user="user"
+    v-bind:workouts="workouts"
+    v-bind:nWorkout="nWorkout"
+    v-bind:workOutData="workOutData"
+    v-on:setWorkOutData="setWorkOutData"
+  ></router-view>
 </template>
 
 <script>
@@ -7,13 +13,15 @@ import Calendario from "./comp/Calendario";
 import Configuracion from "./comp/Configuracion";
 import Tipo from "./comp/Tipo";
 import User from "./comp/User";
+import Workout from "./comp/Workout";
 
 export default {
   name: "app",
   components: {
     User,
     Configuracion,
-    Calendario
+    Calendario,
+    Workout
   },
   data() {
     return {
@@ -23,7 +31,8 @@ export default {
         type: "perro",
         month: "",
         day: ""
-      }
+      },
+      workOutData: [1,2,3,4]
     };
   },
   created() {
@@ -59,6 +68,9 @@ export default {
     userId() {
       var id = window.location.pathname.slice(11);
       return id;
+    },
+    setWorkOutData(data) {
+      this.workOutData = data;
     }
   }
 };

@@ -1,14 +1,16 @@
 <template>
+
   <router-view
     v-bind:user="user"
     v-bind:workouts="workouts"
     v-bind:nWorkout="nWorkout"
     v-bind:workOutData="workOutData"
-    @on[setWorkOutData]="setWorkOutData"
+    v-on:setWork-Data="setWorkOutData"
   ></router-view>
 </template>
 
 <script>
+import Navbar from "./inc/Navbar";
 import Calendario from "./comp/Calendario";
 import Configuracion from "./comp/Configuracion";
 import Tipo from "./comp/Tipo";
@@ -18,6 +20,7 @@ import Workout from "./comp/Workout";
 export default {
   name: "app",
   components: {
+    Navbar,
     User,
     Configuracion,
     Calendario,
@@ -32,7 +35,7 @@ export default {
         month: "",
         day: ""
       },
-      workOutData: [1,2,3,4,3,2,1,3,4,2,2,1,4]
+      workOutData: []
     };
   },
   created() {
@@ -71,7 +74,7 @@ export default {
     },
     setWorkOutData(data) {
       this.workOutData = data;
-    }
+    },
   }
 };
 </script>

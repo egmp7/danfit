@@ -39,7 +39,7 @@
           <router-link to="/workout">
             <button
               class="btn btn-primary btn-lg btn-block"
-              @click="$emit('setWorkoutData',workOutInfo.workout)"
+              @click="$emit('setWork-Data',workOutInfo.workout)"
             >Empezar</button>
           </router-link>
         </div>

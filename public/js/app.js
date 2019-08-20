@@ -1697,11 +1697,12 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _comp_Calendario__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./comp/Calendario */ "./resources/js/components/comp/Calendario.vue");
-/* harmony import */ var _comp_Configuracion__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./comp/Configuracion */ "./resources/js/components/comp/Configuracion.vue");
-/* harmony import */ var _comp_Tipo__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./comp/Tipo */ "./resources/js/components/comp/Tipo.vue");
-/* harmony import */ var _comp_User__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./comp/User */ "./resources/js/components/comp/User.vue");
-/* harmony import */ var _comp_Workout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./comp/Workout */ "./resources/js/components/comp/Workout.vue");
+/* harmony import */ var _inc_Navbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./inc/Navbar */ "./resources/js/components/inc/Navbar.vue");
+/* harmony import */ var _comp_Calendario__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./comp/Calendario */ "./resources/js/components/comp/Calendario.vue");
+/* harmony import */ var _comp_Configuracion__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./comp/Configuracion */ "./resources/js/components/comp/Configuracion.vue");
+/* harmony import */ var _comp_Tipo__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./comp/Tipo */ "./resources/js/components/comp/Tipo.vue");
+/* harmony import */ var _comp_User__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./comp/User */ "./resources/js/components/comp/User.vue");
+/* harmony import */ var _comp_Workout__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./comp/Workout */ "./resources/js/components/comp/Workout.vue");
 //
 //
 //
@@ -1712,6 +1713,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
 
 
 
@@ -1720,10 +1723,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "app",
   components: {
-    User: _comp_User__WEBPACK_IMPORTED_MODULE_3__["default"],
-    Configuracion: _comp_Configuracion__WEBPACK_IMPORTED_MODULE_1__["default"],
-    Calendario: _comp_Calendario__WEBPACK_IMPORTED_MODULE_0__["default"],
-    Workout: _comp_Workout__WEBPACK_IMPORTED_MODULE_4__["default"]
+    Navbar: _inc_Navbar__WEBPACK_IMPORTED_MODULE_0__["default"],
+    User: _comp_User__WEBPACK_IMPORTED_MODULE_4__["default"],
+    Configuracion: _comp_Configuracion__WEBPACK_IMPORTED_MODULE_2__["default"],
+    Calendario: _comp_Calendario__WEBPACK_IMPORTED_MODULE_1__["default"],
+    Workout: _comp_Workout__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   data: function data() {
     return {
@@ -1734,7 +1738,7 @@ __webpack_require__.r(__webpack_exports__);
         month: "",
         day: ""
       },
-      workOutData: [1, 2, 3, 4, 3, 2, 1, 3, 4, 2, 2, 1, 4]
+      workOutData: []
     };
   },
   created: function created() {
@@ -2049,7 +2053,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   //name:Workout,
   props: ["workOutData"],
@@ -2066,7 +2069,8 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var counter = 0;
-      this.workOutData.map(function (x) {
+      var workOutData = this.workOutData.split(",");
+      workOutData.map(function (x) {
         if (counter == 0) {
           var object = {
             id: counter,
@@ -2106,6 +2110,69 @@ __webpack_require__.r(__webpack_exports__);
           vidPause.pause();
         }
       });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/inc/Navbar.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/inc/Navbar.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  methods: {
+    setWorkOutData: function setWorkOutData() {
+      console.log('esto es la nav perro');
     }
   }
 });
@@ -38107,7 +38174,7 @@ var render = function() {
       nWorkout: _vm.nWorkout,
       workOutData: _vm.workOutData
     },
-    on: { "on[setWorkOutData]": _vm.setWorkOutData }
+    on: { "setWork-Data": _vm.setWorkOutData }
   })
 }
 var staticRenderFns = []
@@ -38417,10 +38484,7 @@ var render = function() {
                   staticClass: "btn btn-primary btn-lg btn-block",
                   on: {
                     click: function($event) {
-                      return _vm.$emit(
-                        "setWorkoutData",
-                        _vm.workOutInfo.workout
-                      )
+                      return _vm.$emit("setWork-Data", _vm.workOutInfo.workout)
                     }
                   }
                 },
@@ -38526,54 +38590,58 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { attrs: { id: "navbar" } }, [
-    _c("img", { attrs: { src: "/img/logo.png", alt: "DanFitCenter_logo" } }),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "menu" },
-      [
-        _c("router-link", { attrs: { to: "/" } }, [
-          _c("div", { staticClass: "element" }, [
-            _c("i", { staticClass: "fas fa-tachometer-alt fa-2x" }),
-            _vm._v(" "),
-            _c("p", [_vm._v("DASHBOARD")])
+  return _c(
+    "div",
+    { attrs: { id: "navbar" }, on: { setWorkOutData: _vm.setWorkOutData } },
+    [
+      _c("img", { attrs: { src: "/img/logo.png", alt: "DanFitCenter_logo" } }),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "menu" },
+        [
+          _c("router-link", { attrs: { to: "/" } }, [
+            _c("div", { staticClass: "element" }, [
+              _c("i", { staticClass: "fas fa-tachometer-alt fa-2x" }),
+              _vm._v(" "),
+              _c("p", [_vm._v("DASHBOARD")])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("router-link", { attrs: { to: "/tipo" } }, [
+            _c("div", { staticClass: "element" }, [
+              _c("i", { staticClass: "fas fa-dumbbell fa-2x" }),
+              _vm._v(" "),
+              _c("p", [_vm._v("PROGRAMA")])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("router-link", { attrs: { to: "/calendario" } }, [
+            _c("div", { staticClass: "element" }, [
+              _c("i", { staticClass: "fas fa-calendar-alt fa-2x" }),
+              _vm._v(" "),
+              _c("p", [_vm._v("CALENDARIO")])
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _vm._m(1),
+          _vm._v(" "),
+          _vm._m(2),
+          _vm._v(" "),
+          _c("router-link", { attrs: { to: "/configuracion" } }, [
+            _c("div", { staticClass: "element" }, [
+              _c("i", { staticClass: "fas fa-cogs fa-2x" }),
+              _vm._v(" "),
+              _c("p", [_vm._v("CONFIG")])
+            ])
           ])
-        ]),
-        _vm._v(" "),
-        _c("router-link", { attrs: { to: "/tipo" } }, [
-          _c("div", { staticClass: "element" }, [
-            _c("i", { staticClass: "fas fa-dumbbell fa-2x" }),
-            _vm._v(" "),
-            _c("p", [_vm._v("PROGRAMA")])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("router-link", { attrs: { to: "/calendario" } }, [
-          _c("div", { staticClass: "element" }, [
-            _c("i", { staticClass: "fas fa-calendar-alt fa-2x" }),
-            _vm._v(" "),
-            _c("p", [_vm._v("CALENDARIO")])
-          ])
-        ]),
-        _vm._v(" "),
-        _vm._m(0),
-        _vm._v(" "),
-        _vm._m(1),
-        _vm._v(" "),
-        _vm._m(2),
-        _vm._v(" "),
-        _c("router-link", { attrs: { to: "/configuracion" } }, [
-          _c("div", { staticClass: "element" }, [
-            _c("i", { staticClass: "fas fa-cogs fa-2x" }),
-            _vm._v(" "),
-            _c("p", [_vm._v("CONFIG")])
-          ])
-        ])
-      ],
-      1
-    )
-  ])
+        ],
+        1
+      )
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
@@ -54174,15 +54242,17 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Navbar_vue_vue_type_template_id_bd00d8e8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Navbar.vue?vue&type=template&id=bd00d8e8& */ "./resources/js/components/inc/Navbar.vue?vue&type=template&id=bd00d8e8&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _Navbar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Navbar.vue?vue&type=script&lang=js& */ "./resources/js/components/inc/Navbar.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
-var script = {}
+
+
 
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
-  script,
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Navbar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _Navbar_vue_vue_type_template_id_bd00d8e8___WEBPACK_IMPORTED_MODULE_0__["render"],
   _Navbar_vue_vue_type_template_id_bd00d8e8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -54196,6 +54266,20 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 if (false) { var api; }
 component.options.__file = "resources/js/components/inc/Navbar.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/inc/Navbar.vue?vue&type=script&lang=js&":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/inc/Navbar.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Navbar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Navbar.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/inc/Navbar.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Navbar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 

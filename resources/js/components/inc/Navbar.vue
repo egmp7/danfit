@@ -1,5 +1,5 @@
 <template>
-<div id="navbar">
+<div id="navbar" v-on:setWorkOutData="setWorkOutData">
     <img src="/img/logo.png" alt="DanFitCenter_logo">
     <div class="menu">
         <router-link to="/">
@@ -41,3 +41,13 @@
     </div>
 </div>
 </template>
+
+<script>
+export default {
+    methods:{
+        setWorkOutData(){
+            console.log('esto es la nav perro')
+        }
+    }
+}
+</script>

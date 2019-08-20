@@ -8,7 +8,6 @@
     </div>
     <div class="option btn btn-block" v-for="video in videos" v-bind:key="video.id1">
       <button @click="pick(video.id)">Click me {{video.id}}</button>
-      
     </div>
   </div>
 </template>
@@ -27,7 +26,9 @@ export default {
   methods: {
     getVideoObjects() {
       let counter = 0;
-      this.workOutData.map(x => {
+      let workOutData = this.workOutData.split(",");
+      
+      workOutData.map(x => {
         if (counter == 0) {
           let object = {
             id: counter,
@@ -52,16 +53,16 @@ export default {
       document.getElementById(id).loop = true;
       let vid = document.getElementById(id);
       vid.play();
-      this.videos.map(x=>{
-          if (x.id == id) {
-              x.show = true;
-          }
-      })
+      this.videos.map(x => {
+        if (x.id == id) {
+          x.show = true;
+        }
+      });
 
       //PAUSE VIDEOS AND HIDE
       this.videos.map(x => {
         if (x.id !== id) {
-            x.show =false;
+          x.show = false;
           let vidPause = document.getElementById(x.id);
           vidPause.pause();
         }

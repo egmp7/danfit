@@ -39,10 +39,10 @@ export default {
   name: "Calendario",
   props: ["user", "nWorkout"],
   created() {
-    this.progressDays(this.user.progress, this.nWorkout);
+    this.getProgressDays(this.user.progress, this.nWorkout);
   },
   methods: {
-    progressDays(user, nWorkout) {
+    getProgressDays(user, nWorkout) {
       let daysCompleted = [];
       let days = [];
       user.map(x => {

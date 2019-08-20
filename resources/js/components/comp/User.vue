@@ -60,7 +60,7 @@ export default {
   props: ["user", "workouts", "nWorkout", "workOutData"],
   created() {
     this.getProgressBar(this.user.progress, this.nWorkout);
-    this.getWorkOut();
+    this.getWorkOutInfo();
   },
   methods: {
     getProgressBar(progress, nWorkout) {
@@ -72,7 +72,7 @@ export default {
       });
       this.progressBarData = (counter / 28) * 100;
     },
-    getWorkOut() {
+    getWorkOutInfo() {
       this.workouts.map(x => {
         if (
           x.type == this.nWorkout.type &&

@@ -4,7 +4,7 @@
     v-bind:workouts="workouts"
     v-bind:nWorkout="nWorkout"
     v-bind:workOutData="workOutData"
-    v-on:setWorkOutData="setWorkOutData"
+    @on[setWorkOutData]="setWorkOutData"
   ></router-view>
 </template>
 
@@ -32,7 +32,7 @@ export default {
         month: "",
         day: ""
       },
-      workOutData: [1,2,3,4]
+      workOutData: [1,2,3,4,3,2,1,3,4,2,2,1,4]
     };
   },
   created() {

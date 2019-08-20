@@ -13,15 +13,15 @@
               <div
                 class="progress-bar progress-bar-striped"
                 role="progressbar"
-                style="width: 10%"
-                aria-valuenow="10"
+                v-bind:style="'width:'+ progressBarData + '%'"
                 aria-valuemin="0"
                 aria-valuemax="100"
               >
                 <span>Progreso Completado</span>
               </div>
             </div>
-            <p>DÍA 1</p>
+            <p>DÍA {{nWorkout.day}}</p>
+            <p>MES {{nWorkout.month}}</p>
           </div>
         </div>
       </div>
@@ -30,14 +30,10 @@
     <div id="today">
       <h2>WORKOUT DEL DÍA</h2>
       <img src="/../img/workout.jpg" alt="Workout del dia" />
-      <h3>NOMBRE DEL WORKOUT</h3>
+      <h3>{{workouts[0].name}}</h3>
       <div class="row">
         <div class="col-md-8">
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Id non sed debitis possimus quasi sit illum
-            asperiores,
-            tempore sunt eos blanditiis, ad vel enim libero animi earum! Dolorem, voluptas unde.
-          </p>
+          <p>{{workouts[0].description}}</p>
         </div>
         <div class="col-md-4">
           <button class="btn btn-primary btn-lg btn-block">Empezar</button>
@@ -49,7 +45,29 @@
 
 <script>
 export default {
-  name:"User",
-  props:["user"]
+  data() {
+    return {
+      progressBarData: [],
+    };
+  },
+  //name: "User",
+  props: ["user", "workouts", "nWorkout"],
+  created() {
+    this.progressBar(this.user.progress, this.nWorkout);
+  },
+  methods: {
+    progressBar(progress, nWorkout) {
+      let counter = 0;
+      progress.map(x => {
+        if (
+          x.month == nWorkout.month &&
+          x.type == nWorkout.type
+        ) {
+          counter++;
+        }
+      });
+      this.progressBarData = (counter / 28) * 100;
+    }
+  }
 };
 </script>

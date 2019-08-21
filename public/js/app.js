@@ -1713,7 +1713,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -1734,9 +1733,10 @@ __webpack_require__.r(__webpack_exports__);
       user: {},
       workouts: {},
       nWorkout: {
-        type: "perro",
-        month: "",
-        day: ""
+        type: "1",
+        //THIS NEEDS WORK _____________PILAS
+        month: "1",
+        day: "1"
       },
       workOutData: []
     };
@@ -1744,7 +1744,6 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     this.fetchUser();
     this.fetchWorkouts();
-    this.userId();
   },
   methods: {
     fetchUser: function fetchUser() {
@@ -1753,18 +1752,9 @@ __webpack_require__.r(__webpack_exports__);
       fetch("../api/user_data/" + this.userId()).then(function (res) {
         return res.json();
       }).then(function (res) {
-        _this.user = res.data; //GET NEXT WORKOUT: TYPE MONTH AND DAY
+        _this.user = res.data;
 
-        var arrayLenght = res.data.progress.length;
-        _this.nWorkout.type = res.data.progress[arrayLenght - 1].type;
-        _this.nWorkout.month = res.data.progress[arrayLenght - 1].month;
-
-        if (res.data.progress[arrayLenght - 1].day + 1 > 28) {
-          _this.nWorkout.day = 1;
-          _this.nWorkout.month++;
-        } else {
-          _this.nWorkout.day = res.data.progress[arrayLenght - 1].day + 1;
-        }
+        _this.getNWorkout();
       });
     },
     fetchWorkouts: function fetchWorkouts() {
@@ -1779,6 +1769,21 @@ __webpack_require__.r(__webpack_exports__);
     userId: function userId() {
       var id = window.location.pathname.slice(11);
       return id;
+    },
+    getNWorkout: function getNWorkout() {
+      var progress = this.user.progress;
+
+      if (progress.length > 0) {
+        this.nWorkout.type = progress[progress.length - 1].type;
+        this.nWorkout.month = progress[progress.length - 1].month;
+
+        if (progress[progress.length - 1].day + 1 > 28) {
+          this.nWorkout.day = 1;
+          this.nWorkout.month++;
+        } else {
+          this.nWorkout.day = progress[progress.length - 1].day + 1;
+        }
+      }
     },
     setWorkOutData: function setWorkOutData(data) {
       this.workOutData = data;
@@ -1797,14 +1802,14 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1839,48 +1844,67 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      days: {}
+      days: {},
+      month: "",
+      workOutInfo: {
+        workout: []
+      }
     };
   },
-  name: "Calendario",
-  props: ["user", "nWorkout"],
+  //name: "Calendario",
+  props: ["user", "nWorkout", "workouts"],
   created: function created() {
-    this.getProgressDays(this.user.progress, this.nWorkout);
+    this.changeMonth(this.nWorkout.month);
   },
   methods: {
-    getProgressDays: function getProgressDays(user, nWorkout) {
+    getProgressDays: function getProgressDays(user, monthAndType) {
       var daysCompleted = [];
       var days = [];
       user.map(function (x) {
-        if (x.month == nWorkout.month && x.type == nWorkout.type) {
+        if (x.month == monthAndType.month && x.type == monthAndType.type) {
           daysCompleted.push(x.day);
         }
       });
 
-      var _loop = function _loop(i) {
-        daysCompleted.map(function (x) {
-          if (x == i) {
-            var data = {
-              day: i,
-              completed: true
-            };
-            days.push(data);
-          } else {
-            var _data = {
-              day: i,
-              completed: false
-            };
-            days.push(_data);
-          }
-        });
-      };
-
       for (var i = 1; i < 29; i++) {
-        _loop(i);
+        var data = {};
+
+        if (daysCompleted.includes(i)) {
+          data.day = i;
+          data.completed = true;
+          days.push(data);
+        } else {
+          data.day = i;
+          data.completed = false;
+          days.push(data);
+        }
       }
 
-      days = _toConsumableArray(new Set(days));
       this.days = days;
+    },
+    changeMonth: function changeMonth(month) {
+      this.month = month;
+      var monthAndType = {
+        month: month,
+        type: this.nWorkout.type
+      };
+      this.getProgressDays(this.user.progress, monthAndType);
+    },
+    getWorkOutInfo: function getWorkOutInfo(day) {
+      var _this = this;
+
+      var data = {};
+      this.workouts.map(function (x) {
+        if (x.type == _this.nWorkout.type && //THIS NEED MORE WORK______PILAS
+        x.month == _this.month && x.day == day) {
+          data = x;
+        }
+      });
+      this.workOutInfo = data;
+    },
+    reload: function reload() {
+      //  CHANGE THIS IN PRODUCTION
+      window.location.href = "http://danfit.local/dashboard/1#/workout";
     }
   }
 });
@@ -6636,7 +6660,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.is-completed[data-v-9e79baee]{\n  background:#96e07e !important;\n}\n", ""]);
+exports.push([module.i, "\n.box a[data-v-9e79baee] {\n  display: flex;\n  flex-wrap: wrap;\n}\n.is-completed[data-v-9e79baee] {\n  background: #96e07e !important;\n}\n", ""]);
 
 // exports
 
@@ -38216,61 +38240,97 @@ var render = function() {
             "aria-expanded": "false"
           }
         },
-        [_vm._v("MES " + _vm._s(_vm.nWorkout.month))]
+        [_vm._v("MES " + _vm._s(_vm.month))]
       ),
       _vm._v(" "),
-      _vm._m(0)
+      _c(
+        "div",
+        {
+          staticClass: "dropdown-menu",
+          attrs: { "aria-labelledby": "dropdownMenuLink" }
+        },
+        [
+          _c(
+            "a",
+            {
+              staticClass: "dropdown-item",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  return _vm.changeMonth(1)
+                }
+              }
+            },
+            [_vm._v("Mes 1")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "dropdown-divider" }),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "dropdown-item",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  return _vm.changeMonth(2)
+                }
+              }
+            },
+            [_vm._v("Mes 2")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "dropdown-divider" }),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "dropdown-item",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  return _vm.changeMonth(3)
+                }
+              }
+            },
+            [_vm._v("Mes 3")]
+          )
+        ]
+      )
     ]),
     _vm._v(" "),
     _c(
       "div",
       { staticClass: "box" },
-      _vm._l(_vm.days, function(day) {
-        return _c(
-          "div",
-          {
-            key: day.day,
-            staticClass: "day",
-            class: { "is-completed": day.completed }
-          },
-          [_c("p", [_vm._v(_vm._s(day.day))])]
+      [
+        _c(
+          "router-link",
+          { attrs: { to: "/workout" } },
+          _vm._l(_vm.days, function(day) {
+            return _c(
+              "div",
+              {
+                key: day.day,
+                staticClass: "day",
+                class: { "is-completed": day.completed },
+                on: {
+                  click: function($event) {
+                    _vm.getWorkOutInfo(day.day),
+                      _vm.$emit("setWork-Data", _vm.workOutInfo.workout)
+                  }
+                }
+              },
+              [_c("p", [_vm._v(_vm._s(day.day))])]
+            )
+          }),
+          0
         )
-      }),
-      0
+      ],
+      1
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass: "dropdown-menu",
-        attrs: { "aria-labelledby": "dropdownMenuLink" }
-      },
-      [
-        _c("a", { staticClass: "dropdown-item", attrs: { href: "#perro" } }, [
-          _vm._v("Mes 1")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "dropdown-divider" }),
-        _vm._v(" "),
-        _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-          _vm._v("Mes 2")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "dropdown-divider" }),
-        _vm._v(" "),
-        _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-          _vm._v("Mes 3")
-        ])
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

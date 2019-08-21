@@ -11,21 +11,29 @@
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
-      >MES {{nWorkout.month}}</a>
+      >MES {{month}}</a>
 
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-        <a class="dropdown-item" href="#perro">Mes 1</a>
+        <a @click="changeMonth(1)" class="dropdown-item" href="#">Mes 1</a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#">Mes 2</a>
+        <a @click="changeMonth(2)" class="dropdown-item" href="#">Mes 2</a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#">Mes 3</a>
+        <a @click="changeMonth(3)" class="dropdown-item" href="#">Mes 3</a>
       </div>
     </div>
 
     <div class="box">
-      <div class="day" v-bind:class="{'is-completed':day.completed}" v-bind:key="day.day" v-for="day in days" >
-        <p >{{day.day}}</p>
-      </div>
+      <router-link to="/workout">
+        <div
+          class="day"
+          v-bind:class="{'is-completed':day.completed}"
+          v-bind:key="day.day"
+          v-for="day in days"
+          @click="getWorkOutInfo(day.day),$emit('setWork-Data',workOutInfo.workout)"
+        >
+          <p>{{day.day}}</p>
+        </div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -33,48 +41,75 @@
 export default {
   data() {
     return {
-      days: {}
+      days: {},
+      month: "",
+      workOutInfo: {
+        workout: []
+      }
     };
   },
-  name: "Calendario",
-  props: ["user", "nWorkout"],
+  //name: "Calendario",
+  props: ["user", "nWorkout", "workouts"],
   created() {
-    this.getProgressDays(this.user.progress, this.nWorkout);
+    this.changeMonth(this.nWorkout.month);
   },
   methods: {
-    getProgressDays(user, nWorkout) {
+    getProgressDays(user, monthAndType) {
       let daysCompleted = [];
       let days = [];
       user.map(x => {
-        if (x.month == nWorkout.month && x.type == nWorkout.type) {
+        if (x.month == monthAndType.month && x.type == monthAndType.type) {
           daysCompleted.push(x.day);
         }
       });
       for (let i = 1; i < 29; i++) {
-        daysCompleted.map(x => {
-          if (x == i) {
-            let data = {
-              day: i,
-              completed: true
-            };
-            days.push(data);
-          } else {
-            let data = {
-              day: i,
-              completed: false
-            };
-            days.push(data);
-          }
-        });
-      }
-      days = [...new Set(days)];
+        let data ={};
+        if (daysCompleted.includes(i)){
+          data.day = i;
+          data.completed = true;
+          days.push(data);
+        }else{
+          data.day = i;
+          data.completed = false;
+          days.push(data);
+        }
+      }      
       this.days = days;
+    },
+    changeMonth(month) {
+      this.month = month;
+      let monthAndType = {
+        month: month,
+        type: this.nWorkout.type
+      };
+      this.getProgressDays(this.user.progress, monthAndType);
+    },
+    getWorkOutInfo(day) {
+      let data = {};
+      this.workouts.map(x => {
+        if (
+          x.type == this.nWorkout.type && //THIS NEED MORE WORK______PILAS
+          x.month == this.month &&
+          x.day == day
+        ) {
+          data = x;
+        }
+      });
+      this.workOutInfo = data;
+    },
+    reload() {
+      //  CHANGE THIS IN PRODUCTION
+      window.location.href = "http://danfit.local/dashboard/1#/workout";
     }
   }
 };
 </script>
 <style scoped>
-.is-completed{
-  background:#96e07e !important;
+.box a {
+  display: flex;
+  flex-wrap: wrap;
+}
+.is-completed {
+  background: #96e07e !important;
 }
 </style>

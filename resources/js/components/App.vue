@@ -1,5 +1,4 @@
 <template>
-
   <router-view
     v-bind:user="user"
     v-bind:workouts="workouts"
@@ -31,9 +30,9 @@ export default {
       user: {},
       workouts: {},
       nWorkout: {
-        type: "perro",
-        month: "",
-        day: ""
+        type: "1", //THIS NEEDS WORK _____________PILAS
+        month: "1",
+        day: "1"
       },
       workOutData: []
     };
@@ -41,7 +40,6 @@ export default {
   created() {
     this.fetchUser();
     this.fetchWorkouts();
-    this.userId();
   },
   methods: {
     fetchUser() {
@@ -49,16 +47,7 @@ export default {
         .then(res => res.json())
         .then(res => {
           this.user = res.data;
-          //GET NEXT WORKOUT: TYPE MONTH AND DAY
-          let arrayLenght = res.data.progress.length;
-          this.nWorkout.type = res.data.progress[arrayLenght - 1].type;
-          this.nWorkout.month = res.data.progress[arrayLenght - 1].month;
-          if (res.data.progress[arrayLenght - 1].day + 1 > 28) {
-            this.nWorkout.day = 1;
-            this.nWorkout.month++;
-          } else {
-            this.nWorkout.day = res.data.progress[arrayLenght - 1].day + 1;
-          }
+          this.getNWorkout();
         });
     },
     fetchWorkouts() {
@@ -72,9 +61,22 @@ export default {
       var id = window.location.pathname.slice(11);
       return id;
     },
+    getNWorkout() {
+      let progress = this.user.progress;
+      if (progress.length > 0) {
+        this.nWorkout.type = progress[progress.length - 1].type;
+        this.nWorkout.month = progress[progress.length - 1].month;
+        if (progress[progress.length - 1].day + 1 > 28) {
+          this.nWorkout.day = 1;
+          this.nWorkout.month++;
+        } else {
+          this.nWorkout.day = progress[progress.length - 1].day + 1;
+        }
+      }
+    },
     setWorkOutData(data) {
       this.workOutData = data;
-    },
+    }
   }
 };
 </script>

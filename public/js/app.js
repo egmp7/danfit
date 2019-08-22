@@ -1730,8 +1730,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      user: {},
-      workouts: {},
+      user: [],
+      workouts: [],
       nWorkout: {
         type: "1",
         //THIS NEEDS WORK _____________PILAS
@@ -1771,17 +1771,17 @@ __webpack_require__.r(__webpack_exports__);
       return id;
     },
     getNWorkout: function getNWorkout() {
-      var progress = this.user.progress;
+      this.nWorkout.type = 1; //THIS NEEDS TO BE UPDATED
 
-      if (progress.length > 0) {
-        this.nWorkout.type = progress[progress.length - 1].type;
-        this.nWorkout.month = progress[progress.length - 1].month;
+      if (this.user.progress.length > 0) {
+        var lProgress = this.user.progress[this.user.progress.length - 1]; //LOGIC FOR nWorkout DAYS AND MONTHS
 
-        if (progress[progress.length - 1].day + 1 > 28) {
-          this.nWorkout.day = 1;
-          this.nWorkout.month++;
+        if (lProgress.day < 28) {
+          this.nWorkout.day = lProgress.day + 1;
+          this.nWorkout.month = lProgress.month;
         } else {
-          this.nWorkout.day = progress[progress.length - 1].day + 1;
+          this.nWorkout.day = 1;
+          this.nWorkout.month = lProgress.month + 1;
         }
       }
     },
@@ -2027,9 +2027,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   name: "User",
   props: ["user", "workouts", "nWorkout", "workOutData"],
-  created: function created() {
-    this.getProgressBar(this.user.progress, this.nWorkout);
-    this.getWorkOutInfo();
+  created: function created() {//this.getProgressBar(this.user.progress, this.nWorkout);
+    //this.getWorkOutInfo();
   },
   methods: {
     getProgressBar: function getProgressBar(progress, nWorkout) {

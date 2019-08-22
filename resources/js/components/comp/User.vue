@@ -59,8 +59,9 @@ export default {
   name: "User",
   props: ["user", "workouts", "nWorkout", "workOutData"],
   created() {
-    this.getProgressBar(this.user.progress, this.nWorkout);
-    this.getWorkOutInfo();
+    
+      //this.getProgressBar(this.user.progress, this.nWorkout);
+      //this.getWorkOutInfo();
   },
   methods: {
     getProgressBar(progress, nWorkout) {

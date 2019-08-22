@@ -27,14 +27,14 @@ export default {
   },
   data() {
     return {
-      user: {},
-      workouts: {},
+      user: [],
+      workouts: [],
       nWorkout: {
         type: "1", //THIS NEEDS WORK _____________PILAS
         month: "1",
         day: "1"
       },
-      workOutData: []
+      workOutData: [],
     };
   },
   created() {
@@ -62,15 +62,16 @@ export default {
       return id;
     },
     getNWorkout() {
-      let progress = this.user.progress;
-      if (progress.length > 0) {
-        this.nWorkout.type = progress[progress.length - 1].type;
-        this.nWorkout.month = progress[progress.length - 1].month;
-        if (progress[progress.length - 1].day + 1 > 28) {
-          this.nWorkout.day = 1;
-          this.nWorkout.month++;
+      this.nWorkout.type = 1; //THIS NEEDS TO BE UPDATED
+      if (this.user.progress.length > 0) {
+        let lProgress = this.user.progress[this.user.progress.length - 1];
+        //LOGIC FOR nWorkout DAYS AND MONTHS
+        if (lProgress.day < 28) {
+          this.nWorkout.day = lProgress.day + 1;
+          this.nWorkout.month = lProgress.month;
         } else {
-          this.nWorkout.day = progress[progress.length - 1].day + 1;
+          this.nWorkout.day = 1;
+          this.nWorkout.month = lProgress.month + 1;
         }
       }
     },

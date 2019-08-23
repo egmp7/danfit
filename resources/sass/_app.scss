@@ -1,19 +1,28 @@
 $grey: #eaeaea;
 $calendar-button: #a8d1f7;
 $border: #c3c3c3;
+$primary:#1369b6;
+$white:white;
 
 @mixin shadow {
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 
 *{
-    font-family: 'Lexend Deca', sans-serif;
+    font-family: 'Cairo', sans-serif;
     h2{
         font-size: 24px;
         text-align: center;
     }
     .alert{
         margin:20px 0;
+    }
+    #wrap{
+        position: relative;
+        min-height:100vh;
+    }
+    .container {
+        padding-bottom: 60px;
     }
 }
 
@@ -42,6 +51,19 @@ $border: #c3c3c3;
                 margin: 0;
             }
         }
+    }
+}
+// FOOTER
+footer{
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+    background: $primary;
+    display: block;
+    width: 100%;
+    p{
+        margin: 10px;
+        color: $white;
     }
 }
 

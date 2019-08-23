@@ -4,6 +4,8 @@
     v-bind:workouts="workouts"
     v-bind:nWorkout="nWorkout"
     v-bind:workOutData="workOutData"
+    v-bind:progressBarData="progressBarData"
+    v-bind:workOutInfo="workOutInfo"
     v-on:setWork-Data="setWorkOutData"
   ></router-view>
 </template>
@@ -34,7 +36,9 @@ export default {
         month: "1",
         day: "1"
       },
-      workOutData: [],
+      workOutData: "3,4,5,6,7,8,9,10,11",
+      progressBarData:[],
+      workOutInfo:[]
     };
   },
   created() {
@@ -47,14 +51,16 @@ export default {
         .then(res => res.json())
         .then(res => {
           this.user = res.data;
-          this.getNWorkout();
-        });
+          //REST OF THE FUNCTIONS TO GET DATA
+          this.getProgressBar(this.user.progress, this.getNWorkout());
+        });   
     },
     fetchWorkouts() {
       fetch("../api/workouts/")
         .then(res => res.json())
         .then(res => {
           this.workouts = res.data;
+          this.getWorkOutInfo(this.workouts);
         });
     },
     userId() {
@@ -74,9 +80,30 @@ export default {
           this.nWorkout.month = lProgress.month + 1;
         }
       }
+      return this.nWorkout;
     },
     setWorkOutData(data) {
       this.workOutData = data;
+    },
+    getWorkOutInfo(workouts) {
+      workouts.map(x => {
+        if (
+          x.type == this.nWorkout.type &&
+          x.month == this.nWorkout.month &&
+          x.day == this.nWorkout.day
+        ) {
+          this.workOutInfo = x;
+        }
+      });
+    },
+    getProgressBar(progress, nWorkout) {
+      let counter = 0;
+      progress.map(x => {
+        if (x.month == nWorkout.month && x.type == nWorkout.type) {
+          counter++;
+        }
+      });
+      this.progressBarData = (counter / 28) * 100;
     }
   }
 };

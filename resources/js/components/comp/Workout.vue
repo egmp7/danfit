@@ -2,12 +2,14 @@
   <div>
     <h2>WORKOUT</h2>
     <div v-for="video in videos" v-bind:key="video.id0">
-      <video width="320" height="240" v-bind:id="video.id" v-bind:class="{'show':video.show}">
+      <video width="320" height="200" v-bind:id="video.id" v-bind:class="{'show':video.show}">
         <source v-bind:src="'/../storage/workouts/'+video.video+'.mp4'" type="video/mp4" />
       </video>
     </div>
-    <div class="option btn btn-block" v-for="video in videos" v-bind:key="video.id1">
-      <button @click="pick(video.id)">Click me {{video.id}}</button>
+    <div class="wrap">
+      <div  v-for="video in videos" v-bind:key="video.id1">
+        <button class="buttons btn" @click="pick(video.id)">Click me {{video.id}}</button>
+      </div>
     </div>
   </div>
 </template>
@@ -27,7 +29,7 @@ export default {
     getVideoObjects() {
       let counter = 0;
       let workOutData = this.workOutData.split(",");
-      
+
       workOutData.map(x => {
         if (counter == 0) {
           let object = {
@@ -73,10 +75,31 @@ export default {
 </script>
 
 <style scoped>
+h2{
+    margin-bottom: 0;
+    margin-top: 10px;
+}
 video {
   display: none !important;
+  margin: 0 auto;
+  width: 100%;
+  margin-bottom: 20px;
 }
 .show {
   display: block !important;
+}
+.wrap {
+  border: solid #5ea6e4 3px;
+  border-radius: 3px;
+  height:35vh;
+  overflow: scroll;
+}
+.buttons {
+  background: #c7e5ff;
+  border-bottom: solid #75b6ef 1px;
+  width: 100%;
+  border-radius: 0;
+  text-align: left;
+  color: #1369b6
 }
 </style>

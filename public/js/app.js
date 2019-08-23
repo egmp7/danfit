@@ -1713,6 +1713,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 
@@ -1738,7 +1740,9 @@ __webpack_require__.r(__webpack_exports__);
         month: "1",
         day: "1"
       },
-      workOutData: []
+      workOutData: "3,4,5,6,7,8,9,10,11",
+      progressBarData: [],
+      workOutInfo: []
     };
   },
   created: function created() {
@@ -1752,9 +1756,9 @@ __webpack_require__.r(__webpack_exports__);
       fetch("../api/user_data/" + this.userId()).then(function (res) {
         return res.json();
       }).then(function (res) {
-        _this.user = res.data;
+        _this.user = res.data; //REST OF THE FUNCTIONS TO GET DATA
 
-        _this.getNWorkout();
+        _this.getProgressBar(_this.user.progress, _this.getNWorkout());
       });
     },
     fetchWorkouts: function fetchWorkouts() {
@@ -1764,6 +1768,8 @@ __webpack_require__.r(__webpack_exports__);
         return res.json();
       }).then(function (res) {
         _this2.workouts = res.data;
+
+        _this2.getWorkOutInfo(_this2.workouts);
       });
     },
     userId: function userId() {
@@ -1784,9 +1790,29 @@ __webpack_require__.r(__webpack_exports__);
           this.nWorkout.month = lProgress.month + 1;
         }
       }
+
+      return this.nWorkout;
     },
     setWorkOutData: function setWorkOutData(data) {
       this.workOutData = data;
+    },
+    getWorkOutInfo: function getWorkOutInfo(workouts) {
+      var _this3 = this;
+
+      workouts.map(function (x) {
+        if (x.type == _this3.nWorkout.type && x.month == _this3.nWorkout.month && x.day == _this3.nWorkout.day) {
+          _this3.workOutInfo = x;
+        }
+      });
+    },
+    getProgressBar: function getProgressBar(progress, nWorkout) {
+      var counter = 0;
+      progress.map(function (x) {
+        if (x.month == nWorkout.month && x.type == nWorkout.type) {
+          counter++;
+        }
+      });
+      this.progressBarData = counter / 28 * 100;
     }
   }
 });
@@ -2020,36 +2046,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {
-      progressBarData: [],
-      workOutInfo: []
-    };
+    return {};
   },
   name: "User",
-  props: ["user", "workouts", "nWorkout", "workOutData"],
-  created: function created() {//this.getProgressBar(this.user.progress, this.nWorkout);
-    //this.getWorkOutInfo();
-  },
-  methods: {
-    getProgressBar: function getProgressBar(progress, nWorkout) {
-      var counter = 0;
-      progress.map(function (x) {
-        if (x.month == nWorkout.month && x.type == nWorkout.type) {
-          counter++;
-        }
-      });
-      this.progressBarData = counter / 28 * 100;
-    },
-    getWorkOutInfo: function getWorkOutInfo() {
-      var _this = this;
-
-      this.workouts.map(function (x) {
-        if (x.type == _this.nWorkout.type && x.month == _this.nWorkout.month && x.day == _this.nWorkout.day) {
-          _this.workOutInfo = x;
-        }
-      });
-    }
-  }
+  props: ["user", "workouts", "nWorkout", "workOutData", "workOutInfo", "progressBarData"],
+  created: function created() {},
+  methods: {}
 });
 
 /***/ }),
@@ -2063,6 +2065,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -6678,7 +6682,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\nvideo[data-v-721f70c8] {\n  display: none !important;\n}\n.show[data-v-721f70c8] {\n  display: block !important;\n}\n", ""]);
+exports.push([module.i, "\nh2[data-v-721f70c8]{\n    margin-bottom: 0;\n    margin-top: 10px;\n}\nvideo[data-v-721f70c8] {\n  display: none !important;\n  margin: 0 auto;\n  width: 100%;\n  margin-bottom: 20px;\n}\n.show[data-v-721f70c8] {\n  display: block !important;\n}\n.wrap[data-v-721f70c8] {\n  border: solid #5ea6e4 3px;\n  border-radius: 3px;\n  height:35vh;\n  overflow: scroll;\n}\n.buttons[data-v-721f70c8] {\n  background: #c7e5ff;\n  border-bottom: solid #75b6ef 1px;\n  width: 100%;\n  border-radius: 0;\n  text-align: left;\n  color: #1369b6\n}\n", ""]);
 
 // exports
 
@@ -38195,7 +38199,9 @@ var render = function() {
       user: _vm.user,
       workouts: _vm.workouts,
       nWorkout: _vm.nWorkout,
-      workOutData: _vm.workOutData
+      workOutData: _vm.workOutData,
+      progressBarData: _vm.progressBarData,
+      workOutInfo: _vm.workOutInfo
     },
     on: { "setWork-Data": _vm.setWorkOutData }
   })
@@ -38590,7 +38596,7 @@ var render = function() {
             "video",
             {
               class: { show: video.show },
-              attrs: { width: "320", height: "240", id: video.id }
+              attrs: { width: "320", height: "200", id: video.id }
             },
             [
               _c("source", {
@@ -38604,14 +38610,15 @@ var render = function() {
         ])
       }),
       _vm._v(" "),
-      _vm._l(_vm.videos, function(video) {
-        return _c(
-          "div",
-          { key: video.id1, staticClass: "option btn btn-block" },
-          [
+      _c(
+        "div",
+        { staticClass: "wrap" },
+        _vm._l(_vm.videos, function(video) {
+          return _c("div", { key: video.id1 }, [
             _c(
               "button",
               {
+                staticClass: "buttons btn",
                 on: {
                   click: function($event) {
                     return _vm.pick(video.id)
@@ -38620,9 +38627,10 @@ var render = function() {
               },
               [_vm._v("Click me " + _vm._s(video.id))]
             )
-          ]
-        )
-      })
+          ])
+        }),
+        0
+      )
     ],
     2
   )

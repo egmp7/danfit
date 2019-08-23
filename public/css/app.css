@@ -10645,7 +10645,7 @@ a.text-dark:focus {
 }
 
 * {
-  font-family: "Lexend Deca", sans-serif;
+  font-family: "Cairo", sans-serif;
 }
 
 * h2 {
@@ -10655,6 +10655,15 @@ a.text-dark:focus {
 
 * .alert {
   margin: 20px 0;
+}
+
+* #wrap {
+  position: relative;
+  min-height: 100vh;
+}
+
+* .container {
+  padding-bottom: 60px;
 }
 
 #navbar img {
@@ -10683,6 +10692,20 @@ a.text-dark:focus {
 #navbar .menu .element p {
   font-size: 10px;
   margin: 0;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  background: #1369b6;
+  display: block;
+  width: 100%;
+}
+
+footer p {
+  margin: 10px;
+  color: white;
 }
 
 /************************************************

@@ -52,38 +52,18 @@
 export default {
   data() {
     return {
-      progressBarData: [],
-      workOutInfo: []
     };
   },
   name: "User",
-  props: ["user", "workouts", "nWorkout", "workOutData"],
-  created() {
-    
-      //this.getProgressBar(this.user.progress, this.nWorkout);
-      //this.getWorkOutInfo();
-  },
-  methods: {
-    getProgressBar(progress, nWorkout) {
-      let counter = 0;
-      progress.map(x => {
-        if (x.month == nWorkout.month && x.type == nWorkout.type) {
-          counter++;
-        }
-      });
-      this.progressBarData = (counter / 28) * 100;
-    },
-    getWorkOutInfo() {
-      this.workouts.map(x => {
-        if (
-          x.type == this.nWorkout.type &&
-          x.month == this.nWorkout.month &&
-          x.day == this.nWorkout.day
-        ) {
-          this.workOutInfo = x;
-        }
-      });
-    }
-  }
+  props: [
+    "user",
+    "workouts",
+    "nWorkout",
+    "workOutData",
+    "workOutInfo",
+    "progressBarData"
+  ],
+  created() {},
+  methods: {}
 };
 </script>

@@ -17,7 +17,7 @@ class Data extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->email,
+            'type'=> $this->type,
             'user_image' => $this->user_image,
             'progress' => $this->progress,
         ];

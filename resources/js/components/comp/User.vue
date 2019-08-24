@@ -4,24 +4,24 @@
     <div id="user">
       <div class="row align-items-center">
         <div class="col-3">
-          <img v-bind:src="'../storage/user_image/'+user.user_image" alt="user_img" />
+          <img v-bind:src="'../storage/user_image/'+user.main.user_image" alt="user_img" />
         </div>
         <div class="col-9">
           <div class="user-info">
-            <p>{{user.name}}</p>
+            <p>{{user.main.name}}</p>
             <div class="progress">
               <div
                 class="progress-bar progress-bar-striped"
                 role="progressbar"
-                v-bind:style="'width:'+ progressBarData + '%'"
+                v-bind:style="'width:'+ user.progressBar + '%'"
                 aria-valuemin="0"
                 aria-valuemax="100"
               >
                 <span>Progreso Completado</span>
               </div>
             </div>
-            <p>DÍA {{nWorkout.day}}</p>
-            <p>MES {{nWorkout.month}}</p>
+            <p>DÍA {{user.nWorkout.day}}</p>
+            <p>MES {{user.nWorkout.month}}</p>
           </div>
         </div>
       </div>
@@ -30,16 +30,16 @@
     <div id="today">
       <h2>WORKOUT DEL DÍA</h2>
       <img src="/../img/workout.jpg" alt="Workout del dia" />
-      <h3>{{workOutInfo.name}}</h3>
+      <h3>{{workouts.nextData.name}}</h3>
       <div class="row">
         <div class="col-md-8">
-          <p>{{workOutInfo.description}}</p>
+          <p>{{workouts.nextData.description}}</p>
         </div>
         <div class="col-md-4">
           <router-link to="/workout">
             <button
               class="btn btn-primary btn-lg btn-block"
-              @click="$emit('setWork-Data',workOutInfo.workout)"
+              @click="$emit('setWork-Data',workouts.nextData.workout)"
             >Empezar</button>
           </router-link>
         </div>
@@ -58,12 +58,9 @@ export default {
   props: [
     "user",
     "workouts",
-    "nWorkout",
-    "workOutData",
-    "workOutInfo",
-    "progressBarData"
   ],
-  created() {},
+  created() {
+  },
   methods: {}
 };
 </script>

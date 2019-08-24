@@ -1,7 +1,7 @@
 <template>
   <div id="config">
-    <img v-bind:src="'../storage/user_image/'+user.user_image" alt="User Image" />
-    <p>{{user.name}}</p>
+    <img v-bind:src="'../storage/user_image/'+user.main.user_image" alt="User Image" />
+    <p>{{user.main.name}}</p>
 
     <div class="form-group">
       <div class="wrap">

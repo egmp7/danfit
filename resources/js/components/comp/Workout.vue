@@ -7,7 +7,7 @@
       </video>
     </div>
     <div class="wrap">
-      <div  v-for="video in videos" v-bind:key="video.id1">
+      <div v-for="video in videos" v-bind:key="video.id1">
         <button class="buttons btn" @click="pick(video.id)">Click me {{video.id}}</button>
       </div>
     </div>
@@ -15,20 +15,20 @@
 </template>
 <script>
 export default {
-  //name:Workout,
-  props: ["workOutData"],
+  props: ["workouts"],
   data() {
     return {
       videos: []
     };
   },
   created() {
-    this.getVideoObjects();
+    this.getVideoObjects(this.workouts.workOutData);
   },
   methods: {
-    getVideoObjects() {
+    getVideoObjects(workOutData) {
       let counter = 0;
-      let workOutData = this.workOutData.split(",");
+      workOutData = '1,2,3,4,5,6,7,8,9'             // TESTING PUPOSES <---------------
+      workOutData = workOutData.split(",");
 
       workOutData.map(x => {
         if (counter == 0) {
@@ -75,9 +75,9 @@ export default {
 </script>
 
 <style scoped>
-h2{
-    margin-bottom: 0;
-    margin-top: 10px;
+h2 {
+  margin-bottom: 0;
+  margin-top: 10px;
 }
 video {
   display: none !important;
@@ -91,7 +91,7 @@ video {
 .wrap {
   border: solid #5ea6e4 3px;
   border-radius: 3px;
-  height:35vh;
+  height: 35vh;
   overflow: scroll;
 }
 .buttons {
@@ -100,6 +100,6 @@ video {
   width: 100%;
   border-radius: 0;
   text-align: left;
-  color: #1369b6
+  color: #1369b6;
 }
 </style>

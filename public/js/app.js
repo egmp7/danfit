@@ -1712,9 +1712,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 
 
@@ -1733,77 +1730,76 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       user: [],
-      workouts: [],
-      nWorkout: {
-        type: "1",
-        //THIS NEEDS WORK _____________PILAS
-        month: "1",
-        day: "1"
-      },
-      workOutData: "3,4,5,6,7,8,9,10,11",
-      progressBarData: [],
-      workOutInfo: []
+      workouts: []
     };
   },
   created: function created() {
-    this.fetchUser();
-    this.fetchWorkouts();
+    this.fetchUserData();
+    this.fetchWorkoutsData();
   },
   methods: {
-    fetchUser: function fetchUser() {
+    // ********************************************************************
+    //    GET DATA
+    // ********************************************************************
+    userId: function userId() {
+      var id = window.location.pathname.slice(11);
+      return id;
+    },
+    fetchUserData: function fetchUserData() {
       var _this = this;
 
       fetch("../api/user_data/" + this.userId()).then(function (res) {
         return res.json();
       }).then(function (res) {
-        _this.user = res.data; //REST OF THE FUNCTIONS TO GET DATA
-
-        _this.getProgressBar(_this.user.progress, _this.getNWorkout());
+        _this.user = {
+          main: res.data,
+          nWorkout: _this.getNWorkout(res.data),
+          progressBar: _this.getProgressBar(res.data.progress, _this.getNWorkout(res.data)),
+          calendar: _this.setMonth(_this.getNWorkout(res.data).month, res.data)
+        };
       });
     },
-    fetchWorkouts: function fetchWorkouts() {
+    fetchWorkoutsData: function fetchWorkoutsData() {
       var _this2 = this;
 
       fetch("../api/workouts/").then(function (res) {
         return res.json();
       }).then(function (res) {
-        _this2.workouts = res.data;
-
-        _this2.getWorkOutInfo(_this2.workouts);
+        _this2.workouts = {
+          all: res.data,
+          nextData: _this2.getWorkOutInfo(res.data, _this2.user.nWorkout),
+          workOutData: ""
+        };
       });
     },
-    userId: function userId() {
-      var id = window.location.pathname.slice(11);
-      return id;
-    },
-    getNWorkout: function getNWorkout() {
-      this.nWorkout.type = 1; //THIS NEEDS TO BE UPDATED
-
-      if (this.user.progress.length > 0) {
-        var lProgress = this.user.progress[this.user.progress.length - 1]; //LOGIC FOR nWorkout DAYS AND MONTHS
+    // ********************************************************************
+    //    USER OBJECT
+    // ********************************************************************
+    getNWorkout: function getNWorkout(userData) {
+      if (userData.progress.length > 0) {
+        //  LATEST RECORD OF USER PROGRESS
+        var lProgress = userData.progress[userData.progress.length - 1]; //LOGIC FOR nWorkout DAYS AND MONTHS
 
         if (lProgress.day < 28) {
-          this.nWorkout.day = lProgress.day + 1;
-          this.nWorkout.month = lProgress.month;
+          return {
+            type: userData.type,
+            month: lProgress.month,
+            day: lProgress.day + 1
+          };
         } else {
-          this.nWorkout.day = 1;
-          this.nWorkout.month = lProgress.month + 1;
+          return {
+            type: userData.type,
+            month: lProgress.month + 1,
+            day: 1
+          };
         }
+      } else {
+        return {
+          type: userData.type,
+          month: 1,
+          day: 1
+        };
       }
-
-      return this.nWorkout;
-    },
-    setWorkOutData: function setWorkOutData(data) {
-      this.workOutData = data;
-    },
-    getWorkOutInfo: function getWorkOutInfo(workouts) {
-      var _this3 = this;
-
-      workouts.map(function (x) {
-        if (x.type == _this3.nWorkout.type && x.month == _this3.nWorkout.month && x.day == _this3.nWorkout.day) {
-          _this3.workOutInfo = x;
-        }
-      });
     },
     getProgressBar: function getProgressBar(progress, nWorkout) {
       var counter = 0;
@@ -1812,7 +1808,59 @@ __webpack_require__.r(__webpack_exports__);
           counter++;
         }
       });
-      this.progressBarData = counter / 28 * 100;
+      return counter / 28 * 100;
+    },
+    getProgressDays: function getProgressDays(user, monthAndType) {
+      var daysCompleted = [];
+      var days = [];
+      user.map(function (x) {
+        if (x.month == monthAndType.month && x.type == monthAndType.type) {
+          daysCompleted.push(x.day);
+        }
+      });
+
+      for (var i = 1; i < 29; i++) {
+        var data = {};
+
+        if (daysCompleted.includes(i)) {
+          data.day = i;
+          data.completed = true;
+          days.push(data);
+        } else {
+          data.day = i;
+          data.completed = false;
+          days.push(data);
+        }
+      }
+
+      return days;
+    },
+    setMonth: function setMonth(month, user) {
+      var monthAndType = {
+        month: month,
+        type: user.type
+      };
+      var data = {
+        month: month,
+        days: this.getProgressDays(user.progress, monthAndType)
+      };
+      this.user.calendar = data;
+      return data;
+    },
+    // ********************************************************************
+    //    WORKOUTS OBJECT
+    // ********************************************************************
+    getWorkOutInfo: function getWorkOutInfo(workouts, nWorkout) {
+      var data = null;
+      workouts.map(function (x) {
+        if (x.type == nWorkout.type && x.month == nWorkout.month && x.day == nWorkout.day) {
+          data = x;
+        }
+      });
+      return data;
+    },
+    setWorkOutData: function setWorkOutData(data) {
+      this.workouts.workOutData = data;
     }
   }
 });
@@ -1870,67 +1918,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      days: {},
-      month: "",
-      workOutInfo: {
-        workout: []
-      }
+      workOutInfo: {}
     };
   },
   //name: "Calendario",
-  props: ["user", "nWorkout", "workouts"],
-  created: function created() {
-    this.changeMonth(this.nWorkout.month);
-  },
+  props: ["user", "workouts"],
+  created: function created() {},
   methods: {
-    getProgressDays: function getProgressDays(user, monthAndType) {
-      var daysCompleted = [];
-      var days = [];
-      user.map(function (x) {
-        if (x.month == monthAndType.month && x.type == monthAndType.type) {
-          daysCompleted.push(x.day);
-        }
-      });
-
-      for (var i = 1; i < 29; i++) {
-        var data = {};
-
-        if (daysCompleted.includes(i)) {
-          data.day = i;
-          data.completed = true;
-          days.push(data);
-        } else {
-          data.day = i;
-          data.completed = false;
-          days.push(data);
-        }
-      }
-
-      this.days = days;
-    },
-    changeMonth: function changeMonth(month) {
-      this.month = month;
-      var monthAndType = {
-        month: month,
-        type: this.nWorkout.type
-      };
-      this.getProgressDays(this.user.progress, monthAndType);
-    },
     getWorkOutInfo: function getWorkOutInfo(day) {
       var _this = this;
 
       var data = {};
-      this.workouts.map(function (x) {
-        if (x.type == _this.nWorkout.type && //THIS NEED MORE WORK______PILAS
-        x.month == _this.month && x.day == day) {
+      this.workouts.all.map(function (x) {
+        if (x.type == _this.user.nWorkout.type && x.month == _this.user.calendar.month && x.day == day) {
           data = x;
         }
       });
-      this.workOutInfo = data;
-    },
-    reload: function reload() {
-      //  CHANGE THIS IN PRODUCTION
-      window.location.href = "http://danfit.local/dashboard/1#/workout";
+      this.workOutInfo = data.workout;
     }
   }
 });
@@ -2049,7 +2053,7 @@ __webpack_require__.r(__webpack_exports__);
     return {};
   },
   name: "User",
-  props: ["user", "workouts", "nWorkout", "workOutData", "workOutInfo", "progressBarData"],
+  props: ["user", "workouts"],
   created: function created() {},
   methods: {}
 });
@@ -2081,22 +2085,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  //name:Workout,
-  props: ["workOutData"],
+  props: ["workouts"],
   data: function data() {
     return {
       videos: []
     };
   },
   created: function created() {
-    this.getVideoObjects();
+    this.getVideoObjects(this.workouts.workOutData);
   },
   methods: {
-    getVideoObjects: function getVideoObjects() {
+    getVideoObjects: function getVideoObjects(workOutData) {
       var _this = this;
 
       var counter = 0;
-      var workOutData = this.workOutData.split(",");
+      workOutData = '1,2,3,4,5,6,7,8,9'; // TESTING PUPOSES <---------------
+
+      workOutData = workOutData.split(",");
       workOutData.map(function (x) {
         if (counter == 0) {
           var object = {
@@ -6682,7 +6687,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\nh2[data-v-721f70c8]{\n    margin-bottom: 0;\n    margin-top: 10px;\n}\nvideo[data-v-721f70c8] {\n  display: none !important;\n  margin: 0 auto;\n  width: 100%;\n  margin-bottom: 20px;\n}\n.show[data-v-721f70c8] {\n  display: block !important;\n}\n.wrap[data-v-721f70c8] {\n  border: solid #5ea6e4 3px;\n  border-radius: 3px;\n  height:35vh;\n  overflow: scroll;\n}\n.buttons[data-v-721f70c8] {\n  background: #c7e5ff;\n  border-bottom: solid #75b6ef 1px;\n  width: 100%;\n  border-radius: 0;\n  text-align: left;\n  color: #1369b6\n}\n", ""]);
+exports.push([module.i, "\nh2[data-v-721f70c8] {\n  margin-bottom: 0;\n  margin-top: 10px;\n}\nvideo[data-v-721f70c8] {\n  display: none !important;\n  margin: 0 auto;\n  width: 100%;\n  margin-bottom: 20px;\n}\n.show[data-v-721f70c8] {\n  display: block !important;\n}\n.wrap[data-v-721f70c8] {\n  border: solid #5ea6e4 3px;\n  border-radius: 3px;\n  height: 35vh;\n  overflow: scroll;\n}\n.buttons[data-v-721f70c8] {\n  background: #c7e5ff;\n  border-bottom: solid #75b6ef 1px;\n  width: 100%;\n  border-radius: 0;\n  text-align: left;\n  color: #1369b6;\n}\n", ""]);
 
 // exports
 
@@ -38195,15 +38200,8 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("router-view", {
-    attrs: {
-      user: _vm.user,
-      workouts: _vm.workouts,
-      nWorkout: _vm.nWorkout,
-      workOutData: _vm.workOutData,
-      progressBarData: _vm.progressBarData,
-      workOutInfo: _vm.workOutInfo
-    },
-    on: { "setWork-Data": _vm.setWorkOutData }
+    attrs: { user: _vm.user, workouts: _vm.workouts },
+    on: { "setWork-Data": _vm.setWorkOutData, "change-month": _vm.setMonth }
   })
 }
 var staticRenderFns = []
@@ -38245,7 +38243,7 @@ var render = function() {
             "aria-expanded": "false"
           }
         },
-        [_vm._v("MES " + _vm._s(_vm.month))]
+        [_vm._v("MES " + _vm._s(_vm.user.calendar.month))]
       ),
       _vm._v(" "),
       _c(
@@ -38262,7 +38260,7 @@ var render = function() {
               attrs: { href: "#" },
               on: {
                 click: function($event) {
-                  return _vm.changeMonth(1)
+                  return _vm.$emit("change-month", 1, _vm.user.main)
                 }
               }
             },
@@ -38278,7 +38276,7 @@ var render = function() {
               attrs: { href: "#" },
               on: {
                 click: function($event) {
-                  return _vm.changeMonth(2)
+                  return _vm.$emit("change-month", 2, _vm.user.main)
                 }
               }
             },
@@ -38294,7 +38292,7 @@ var render = function() {
               attrs: { href: "#" },
               on: {
                 click: function($event) {
-                  return _vm.changeMonth(3)
+                  return _vm.$emit("change-month", 3, _vm.user.main)
                 }
               }
             },
@@ -38311,7 +38309,7 @@ var render = function() {
         _c(
           "router-link",
           { attrs: { to: "/workout" } },
-          _vm._l(_vm.days, function(day) {
+          _vm._l(_vm.user.calendar.days, function(day) {
             return _c(
               "div",
               {
@@ -38321,7 +38319,7 @@ var render = function() {
                 on: {
                   click: function($event) {
                     _vm.getWorkOutInfo(day.day),
-                      _vm.$emit("setWork-Data", _vm.workOutInfo.workout)
+                      _vm.$emit("setWork-Data", _vm.workOutInfo)
                   }
                 }
               },
@@ -38360,12 +38358,12 @@ var render = function() {
   return _c("div", { attrs: { id: "config" } }, [
     _c("img", {
       attrs: {
-        src: "../storage/user_image/" + _vm.user.user_image,
+        src: "../storage/user_image/" + _vm.user.main.user_image,
         alt: "User Image"
       }
     }),
     _vm._v(" "),
-    _c("p", [_vm._v(_vm._s(_vm.user.name))]),
+    _c("p", [_vm._v(_vm._s(_vm.user.main.name))]),
     _vm._v(" "),
     _vm._m(0),
     _vm._v(" "),
@@ -38490,7 +38488,7 @@ var render = function() {
         _c("div", { staticClass: "col-3" }, [
           _c("img", {
             attrs: {
-              src: "../storage/user_image/" + _vm.user.user_image,
+              src: "../storage/user_image/" + _vm.user.main.user_image,
               alt: "user_img"
             }
           })
@@ -38498,14 +38496,14 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "col-9" }, [
           _c("div", { staticClass: "user-info" }, [
-            _c("p", [_vm._v(_vm._s(_vm.user.name))]),
+            _c("p", [_vm._v(_vm._s(_vm.user.main.name))]),
             _vm._v(" "),
             _c("div", { staticClass: "progress" }, [
               _c(
                 "div",
                 {
                   staticClass: "progress-bar progress-bar-striped",
-                  style: "width:" + _vm.progressBarData + "%",
+                  style: "width:" + _vm.user.progressBar + "%",
                   attrs: {
                     role: "progressbar",
                     "aria-valuemin": "0",
@@ -38516,9 +38514,9 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _c("p", [_vm._v("DÍA " + _vm._s(_vm.nWorkout.day))]),
+            _c("p", [_vm._v("DÍA " + _vm._s(_vm.user.nWorkout.day))]),
             _vm._v(" "),
-            _c("p", [_vm._v("MES " + _vm._s(_vm.nWorkout.month))])
+            _c("p", [_vm._v("MES " + _vm._s(_vm.user.nWorkout.month))])
           ])
         ])
       ])
@@ -38531,11 +38529,11 @@ var render = function() {
         attrs: { src: "/../img/workout.jpg", alt: "Workout del dia" }
       }),
       _vm._v(" "),
-      _c("h3", [_vm._v(_vm._s(_vm.workOutInfo.name))]),
+      _c("h3", [_vm._v(_vm._s(_vm.workouts.nextData.name))]),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-md-8" }, [
-          _c("p", [_vm._v(_vm._s(_vm.workOutInfo.description))])
+          _c("p", [_vm._v(_vm._s(_vm.workouts.nextData.description))])
         ]),
         _vm._v(" "),
         _c(
@@ -38549,7 +38547,10 @@ var render = function() {
                   staticClass: "btn btn-primary btn-lg btn-block",
                   on: {
                     click: function($event) {
-                      return _vm.$emit("setWork-Data", _vm.workOutInfo.workout)
+                      return _vm.$emit(
+                        "setWork-Data",
+                        _vm.workouts.nextData.workout
+                      )
                     }
                   }
                 },

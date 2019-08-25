@@ -25,4 +25,7 @@ Route::post('user_data/{id}','ApiController@saveProgress');
 
 Route::get('workouts','ApiController@showWorkouts');
 
+Route::get('workouts_info','ApiController@showWorkouts_info');
+
+
 

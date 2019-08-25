@@ -8,10 +8,12 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Workout;
 use App\User_progress;
+use App\Workout_info;
 
 //Resources
 use App\Http\Resources\Data as DataResource;
 use App\Http\Resources\Workout as WorkoutResource;
+use App\Http\Resources\Workout_info as Workout_infoResource;
 
 class ApiController extends Controller
 {
@@ -70,6 +72,20 @@ class ApiController extends Controller
             //Return data as resource
             return  new DataResource($user);
         }
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showWorkouts_info()
+    {
+        //Get Data
+        $data = Workout_info::all();
+        
+        //Return data as resource
+        return  Workout_infoResource::collection($data);
+        
     }
 
     /**

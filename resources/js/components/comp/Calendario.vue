@@ -53,15 +53,15 @@ export default {
       let data = {};
       this.workouts.all.map(x => {
         if (
-          x.type == this.user.nWorkout.type && 
+          x.type == this.user.nWorkout.type &&
           x.month == this.user.calendar.month &&
           x.day == day
         ) {
           data = x;
         }
       });
-      this.workOutInfo = data.workout;
-    },
+      this.workOutInfo = data;
+    }
   }
 };
 </script>

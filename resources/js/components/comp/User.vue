@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="this.user">
     <!-- USER -->
     <div id="user">
       <div class="row align-items-center">
@@ -30,16 +30,16 @@
     <div id="today">
       <h2>WORKOUT DEL DÍA</h2>
       <img src="/../img/workout.jpg" alt="Workout del dia" />
-      <h3>{{workouts.nextData.name}}</h3>
+      <h3>{{workouts.next.name}}</h3>
       <div class="row">
         <div class="col-md-8">
-          <p>{{workouts.nextData.description}}</p>
+          <p>{{workouts.next.description}}</p>
         </div>
         <div class="col-md-4">
           <router-link to="/workout">
             <button
               class="btn btn-primary btn-lg btn-block"
-              @click="$emit('setWork-Data',workouts.nextData.workout)"
+              @click="$emit('setWork-Data',workouts.next)"
             >Empezar</button>
           </router-link>
         </div>

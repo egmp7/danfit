@@ -4,6 +4,7 @@
     v-bind:workouts="workouts"
     v-on:setWork-Data="setWorkOutData"
     v-on:change-month="setMonth"
+    v-on:save-workout="saveWorkout"
   ></router-view>
 </template>
 
@@ -26,8 +27,11 @@ export default {
   },
   data() {
     return {
-      user: [],
-      workouts: []
+      user: {},
+      workouts: {
+        workOutData:'1,2,3,4,5,6,7,8,9'
+      },
+      location:'http://danfit.local/dashboard/'
     };
   },
   created() {
@@ -54,7 +58,7 @@ export default {
               res.data.progress,
               this.getNWorkout(res.data)
             ),
-            calendar: this.setMonth(this.getNWorkout(res.data).month, res.data)
+            calendar: this.setMonth(this.getNWorkout(res.data).month, res.data),
           };
         });
     },
@@ -64,7 +68,7 @@ export default {
         .then(res => {
           this.workouts = {
             all: res.data,
-            nextData: this.getWorkOutInfo(res.data, this.user.nWorkout),
+            next: this.getWorkOutInfo(res.data, this.user.nWorkout),
             workOutData: ""
           };
         });
@@ -159,7 +163,34 @@ export default {
       return data;
     },
     setWorkOutData(data) {
-      this.workouts.workOutData = data;
+      
+      this.workouts.workOutData = data.workout;
+      this.user.nWorkout={
+        type: data.type,
+        month:data.month,
+        day: data.day
+      }
+    },
+    // ********************************************************************
+    //    SAVE DATA
+    // ********************************************************************
+    saveWorkout(data){
+      if (data.day !== undefined){
+        fetch("../api/user_data/" + this.userId(),{
+          method: 'post',
+          body: JSON.stringify(data),
+          headers:{
+            'content-type':'application/json'
+          }
+        })
+        .then(res => res.json())
+        .then(data =>{
+          data.type ='',
+          data.month='',
+          data.day=''
+          alert('progress saved');
+        })
+      }
     }
   }
 };

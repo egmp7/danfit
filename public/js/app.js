@@ -1712,6 +1712,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -1729,8 +1730,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      user: [],
-      workouts: []
+      user: {},
+      workouts: {
+        workOutData: '1,2,3,4,5,6,7,8,9'
+      },
+      location: 'http://danfit.local/dashboard/'
     };
   },
   created: function created() {
@@ -1767,7 +1771,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         _this2.workouts = {
           all: res.data,
-          nextData: _this2.getWorkOutInfo(res.data, _this2.user.nWorkout),
+          next: _this2.getWorkOutInfo(res.data, _this2.user.nWorkout),
           workOutData: ""
         };
       });
@@ -1860,7 +1864,31 @@ __webpack_require__.r(__webpack_exports__);
       return data;
     },
     setWorkOutData: function setWorkOutData(data) {
-      this.workouts.workOutData = data;
+      this.workouts.workOutData = data.workout;
+      this.user.nWorkout = {
+        type: data.type,
+        month: data.month,
+        day: data.day
+      };
+    },
+    // ********************************************************************
+    //    SAVE DATA
+    // ********************************************************************
+    saveWorkout: function saveWorkout(data) {
+      if (data.day !== undefined) {
+        fetch("../api/user_data/" + this.userId(), {
+          method: 'post',
+          body: JSON.stringify(data),
+          headers: {
+            'content-type': 'application/json'
+          }
+        }).then(function (res) {
+          return res.json();
+        }).then(function (data) {
+          data.type = '', data.month = '', data.day = '';
+          alert('progress saved');
+        });
+      }
     }
   }
 });
@@ -1934,7 +1962,7 @@ __webpack_require__.r(__webpack_exports__);
           data = x;
         }
       });
-      this.workOutInfo = data.workout;
+      this.workOutInfo = data;
     }
   }
 });
@@ -2084,64 +2112,131 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["workouts"],
+  props: ["workouts", "user"],
   data: function data() {
     return {
-      videos: []
+      videos: [],
+      buttons: [],
+      saveWorkout: {}
     };
   },
   created: function created() {
-    this.getVideoObjects(this.workouts.workOutData);
+    this.getVideos(this.workouts.workOutData);
+    this.getButtons();
   },
   methods: {
-    getVideoObjects: function getVideoObjects(workOutData) {
+    getVideos: function getVideos(workOutData) {
       var _this = this;
 
       var counter = 0;
-      workOutData = '1,2,3,4,5,6,7,8,9'; // TESTING PUPOSES <---------------
-
       workOutData = workOutData.split(",");
       workOutData.map(function (x) {
+        var video = {};
+
         if (counter == 0) {
-          var object = {
-            id: counter,
-            video: x,
+          video = {
+            id: x,
             show: true
           };
           counter++;
 
-          _this.videos.push(object);
+          _this.videos.push(video);
         } else {
-          var _object = {
-            id: counter,
-            video: x,
+          video = {
+            id: x,
             show: false
           };
-          counter++;
 
-          _this.videos.push(_object);
+          _this.videos.push(video);
         }
       });
     },
-    pick: function pick(id) {
-      //PLAY VIDEO AND SHOW
-      document.getElementById(id).loop = true;
-      var vid = document.getElementById(id);
-      vid.play();
-      this.videos.map(function (x) {
-        if (x.id == id) {
-          x.show = true;
-        }
-      }); //PAUSE VIDEOS AND HIDE
+    getButtons: function getButtons() {
+      var _this2 = this;
 
       this.videos.map(function (x) {
-        if (x.id !== id) {
-          x.show = false;
-          var vidPause = document.getElementById(x.id);
-          vidPause.pause();
+        var data = {
+          id: "btn" + x.id,
+          name: "",
+          active: false,
+          completed: false
+        };
+
+        _this2.buttons.push(data);
+      });
+    },
+    pick: function pick(id) {
+      var videoId = parseInt(id.match(/\d+/g)); //PLAY VIDEO AND SHOW
+
+      this.videos.map(function (x) {
+        if (x.id == videoId) {
+          x.show = true;
+          var vid = document.getElementById(x.id);
+          vid.loop = true;
+          vid.play();
+        } //PAUSE VIDEOS AND HIDE
+        else {
+            x.show = false;
+
+            var _vid = document.getElementById(x.id);
+
+            _vid.pause();
+          }
+      }); //COMPLETED ACTION
+
+      this.buttons.map(function (x) {
+        if (x.id == id) {
+          x.completed = true;
         }
       });
+    },
+    empezar: function empezar() {
+      var videos = document.getElementsByTagName('video');
+      videos[0].play();
+      videos[0].loop = true;
+      this.buttons[0].completed = true;
+    },
+    check: function check() {
+      var data = this.user.nWorkout;
+      var exists = false; //CHECK IF PROGRESS ELEMENT EXISTS
+
+      this.user.main.progress.map(function (x) {
+        if (x.type == data.type && x.month == data.month && x.day == data.day) {
+          exists = true;
+        }
+      });
+
+      if (exists == false) {
+        this.saveWorkout = data;
+      }
     }
   }
 });
@@ -6687,7 +6782,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\nh2[data-v-721f70c8] {\n  margin-bottom: 0;\n  margin-top: 10px;\n}\nvideo[data-v-721f70c8] {\n  display: none !important;\n  margin: 0 auto;\n  width: 100%;\n  margin-bottom: 20px;\n}\n.show[data-v-721f70c8] {\n  display: block !important;\n}\n.wrap[data-v-721f70c8] {\n  border: solid #5ea6e4 3px;\n  border-radius: 3px;\n  height: 35vh;\n  overflow: scroll;\n}\n.buttons[data-v-721f70c8] {\n  background: #c7e5ff;\n  border-bottom: solid #75b6ef 1px;\n  width: 100%;\n  border-radius: 0;\n  text-align: left;\n  color: #1369b6;\n}\n", ""]);
+exports.push([module.i, "\nh2[data-v-721f70c8] {\n  margin-bottom: 0;\n  margin-top: 10px;\n}\nvideo[data-v-721f70c8] {\n  display: none !important;\n  margin: 0 auto;\n  width: 100%;\n  margin-bottom: 20px;\n}\n.show[data-v-721f70c8] {\n  display: block !important;\n}\n.wrap[data-v-721f70c8] {\n  border: solid #5ea6e4 3px;\n  border-radius: 3px;\n  height: 35vh;\n  overflow: scroll;\n}\n.buttons[data-v-721f70c8] {\n  background: #c7e5ff;\n  border-bottom: solid #75b6ef 1px;\n  width: 100%;\n  border-radius: 0;\n  text-align: left;\n  color: #1369b6;\n  position: relative;\n}\n.btn[data-v-721f70c8]:focus {\n  background: rgb(181, 211, 250);\n}\n.buttons span[data-v-721f70c8] {\n  display: none;\n}\n.completed span[data-v-721f70c8] {\n  position: absolute;\n  right: 5px;\n  display: inline;\n  color: green;\n}\n.action .btn[data-v-721f70c8] {\n  margin: 10px 0;\n}\n.action .top[data-v-721f70c8] {\n  margin-top: 0;\n}\n", ""]);
 
 // exports
 
@@ -38201,7 +38296,11 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("router-view", {
     attrs: { user: _vm.user, workouts: _vm.workouts },
-    on: { "setWork-Data": _vm.setWorkOutData, "change-month": _vm.setMonth }
+    on: {
+      "setWork-Data": _vm.setWorkOutData,
+      "change-month": _vm.setMonth,
+      "save-workout": _vm.saveWorkout
+    }
   })
 }
 var staticRenderFns = []
@@ -38482,87 +38581,86 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { attrs: { id: "user" } }, [
-      _c("div", { staticClass: "row align-items-center" }, [
-        _c("div", { staticClass: "col-3" }, [
-          _c("img", {
-            attrs: {
-              src: "../storage/user_image/" + _vm.user.main.user_image,
-              alt: "user_img"
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-9" }, [
-          _c("div", { staticClass: "user-info" }, [
-            _c("p", [_vm._v(_vm._s(_vm.user.main.name))]),
-            _vm._v(" "),
-            _c("div", { staticClass: "progress" }, [
-              _c(
-                "div",
-                {
-                  staticClass: "progress-bar progress-bar-striped",
-                  style: "width:" + _vm.user.progressBar + "%",
-                  attrs: {
-                    role: "progressbar",
-                    "aria-valuemin": "0",
-                    "aria-valuemax": "100"
-                  }
-                },
-                [_c("span", [_vm._v("Progreso Completado")])]
-              )
+  return this.user
+    ? _c("div", [
+        _c("div", { attrs: { id: "user" } }, [
+          _c("div", { staticClass: "row align-items-center" }, [
+            _c("div", { staticClass: "col-3" }, [
+              _c("img", {
+                attrs: {
+                  src: "../storage/user_image/" + _vm.user.main.user_image,
+                  alt: "user_img"
+                }
+              })
             ]),
             _vm._v(" "),
-            _c("p", [_vm._v("DÍA " + _vm._s(_vm.user.nWorkout.day))]),
+            _c("div", { staticClass: "col-9" }, [
+              _c("div", { staticClass: "user-info" }, [
+                _c("p", [_vm._v(_vm._s(_vm.user.main.name))]),
+                _vm._v(" "),
+                _c("div", { staticClass: "progress" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "progress-bar progress-bar-striped",
+                      style: "width:" + _vm.user.progressBar + "%",
+                      attrs: {
+                        role: "progressbar",
+                        "aria-valuemin": "0",
+                        "aria-valuemax": "100"
+                      }
+                    },
+                    [_c("span", [_vm._v("Progreso Completado")])]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("p", [_vm._v("DÍA " + _vm._s(_vm.user.nWorkout.day))]),
+                _vm._v(" "),
+                _c("p", [_vm._v("MES " + _vm._s(_vm.user.nWorkout.month))])
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { attrs: { id: "today" } }, [
+          _c("h2", [_vm._v("WORKOUT DEL DÍA")]),
+          _vm._v(" "),
+          _c("img", {
+            attrs: { src: "/../img/workout.jpg", alt: "Workout del dia" }
+          }),
+          _vm._v(" "),
+          _c("h3", [_vm._v(_vm._s(_vm.workouts.next.name))]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-8" }, [
+              _c("p", [_vm._v(_vm._s(_vm.workouts.next.description))])
+            ]),
             _vm._v(" "),
-            _c("p", [_vm._v("MES " + _vm._s(_vm.user.nWorkout.month))])
+            _c(
+              "div",
+              { staticClass: "col-md-4" },
+              [
+                _c("router-link", { attrs: { to: "/workout" } }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary btn-lg btn-block",
+                      on: {
+                        click: function($event) {
+                          return _vm.$emit("setWork-Data", _vm.workouts.next)
+                        }
+                      }
+                    },
+                    [_vm._v("Empezar")]
+                  )
+                ])
+              ],
+              1
+            )
           ])
         ])
       ])
-    ]),
-    _vm._v(" "),
-    _c("div", { attrs: { id: "today" } }, [
-      _c("h2", [_vm._v("WORKOUT DEL DÍA")]),
-      _vm._v(" "),
-      _c("img", {
-        attrs: { src: "/../img/workout.jpg", alt: "Workout del dia" }
-      }),
-      _vm._v(" "),
-      _c("h3", [_vm._v(_vm._s(_vm.workouts.nextData.name))]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("p", [_vm._v(_vm._s(_vm.workouts.nextData.description))])
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-md-4" },
-          [
-            _c("router-link", { attrs: { to: "/workout" } }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary btn-lg btn-block",
-                  on: {
-                    click: function($event) {
-                      return _vm.$emit(
-                        "setWork-Data",
-                        _vm.workouts.nextData.workout
-                      )
-                    }
-                  }
-                },
-                [_vm._v("Empezar")]
-              )
-            ])
-          ],
-          1
-        )
-      ])
-    ])
-  ])
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -38592,7 +38690,7 @@ var render = function() {
       _c("h2", [_vm._v("WORKOUT")]),
       _vm._v(" "),
       _vm._l(_vm.videos, function(video) {
-        return _c("div", { key: video.id0 }, [
+        return _c("div", { key: video.id }, [
           _c(
             "video",
             {
@@ -38602,7 +38700,7 @@ var render = function() {
             [
               _c("source", {
                 attrs: {
-                  src: "/../storage/workouts/" + video.video + ".mp4",
+                  src: "/../storage/workouts/" + video.id + ".mp4",
                   type: "video/mp4"
                 }
               })
@@ -38611,32 +38709,93 @@ var render = function() {
         ])
       }),
       _vm._v(" "),
+      _c("div", { staticClass: "action" }, [
+        _c(
+          "button",
+          {
+            staticClass: "top btn btn-primary",
+            on: {
+              click: function($event) {
+                return _vm.empezar()
+              }
+            }
+          },
+          [_vm._v("Empezar!")]
+        ),
+        _vm._v(" "),
+        _c("a", { attrs: { href: "/" } }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-success top",
+              on: {
+                click: function($event) {
+                  _vm.check(), _vm.$emit("save-workout", _vm.saveWorkout)
+                }
+              }
+            },
+            [_vm._v("Finalizado!")]
+          )
+        ])
+      ]),
+      _vm._v(" "),
       _c(
         "div",
         { staticClass: "wrap" },
-        _vm._l(_vm.videos, function(video) {
-          return _c("div", { key: video.id1 }, [
+        _vm._l(_vm.buttons, function(button) {
+          return _c("div", { key: button.id }, [
             _c(
               "button",
               {
                 staticClass: "buttons btn",
+                class: { completed: button.completed },
+                attrs: { id: button.id },
                 on: {
                   click: function($event) {
-                    return _vm.pick(video.id)
+                    return _vm.pick(button.id)
                   }
                 }
               },
-              [_vm._v("Click me " + _vm._s(video.id))]
+              [
+                _vm._v(
+                  "\n        Click me " + _vm._s(button.id) + "\n        "
+                ),
+                _vm._m(0, true)
+              ]
             )
           ])
         }),
         0
-      )
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "action" }, [
+        _c("a", { attrs: { href: "/" } }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-success btn-block",
+              on: {
+                click: function($event) {
+                  _vm.check(), _vm.$emit("save-workout", _vm.saveWorkout)
+                }
+              }
+            },
+            [_vm._v("Finalizado!")]
+          )
+        ])
+      ])
     ],
     2
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", [_c("i", { staticClass: "fas fa-check-circle" })])
+  }
+]
 render._withStripped = true
 
 

@@ -1713,6 +1713,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -1732,14 +1733,16 @@ __webpack_require__.r(__webpack_exports__);
     return {
       user: {},
       workouts: {
-        workOutData: '1,2,3,4,5,6,7,8,9'
+        workOutData: "1,2,3,4,5,6,7,8,9" //TESTING PURPOSES
+
       },
-      location: 'http://danfit.local/dashboard/'
+      workoutsInfo: {}
     };
   },
   created: function created() {
     this.fetchUserData();
     this.fetchWorkoutsData();
+    this.fetchWorkoutsInfo();
   },
   methods: {
     // ********************************************************************
@@ -1774,6 +1777,15 @@ __webpack_require__.r(__webpack_exports__);
           next: _this2.getWorkOutInfo(res.data, _this2.user.nWorkout),
           workOutData: ""
         };
+      });
+    },
+    fetchWorkoutsInfo: function fetchWorkoutsInfo() {
+      var _this3 = this;
+
+      fetch("../api/workouts_info/").then(function (res) {
+        return res.json();
+      }).then(function (res) {
+        _this3.workoutsInfo = res.data;
       });
     },
     // ********************************************************************
@@ -1877,16 +1889,16 @@ __webpack_require__.r(__webpack_exports__);
     saveWorkout: function saveWorkout(data) {
       if (data.day !== undefined) {
         fetch("../api/user_data/" + this.userId(), {
-          method: 'post',
+          method: "post",
           body: JSON.stringify(data),
           headers: {
-            'content-type': 'application/json'
+            "content-type": "application/json"
           }
         }).then(function (res) {
           return res.json();
         }).then(function (data) {
-          data.type = '', data.month = '', data.day = '';
-          alert('progress saved');
+          data.type = "", data.month = "", data.day = "";
+          alert("progress saved");
         });
       }
     }
@@ -2140,16 +2152,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["workouts", "user"],
+  props: ["workouts", "user", "workoutsInfo"],
   data: function data() {
     return {
       videos: [],
+      buttonsInfo: [],
       buttons: [],
       saveWorkout: {}
     };
   },
   created: function created() {
     this.getVideos(this.workouts.workOutData);
+    this.getButtonsInfo();
     this.getButtons();
   },
   methods: {
@@ -2179,18 +2193,31 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    getButtons: function getButtons() {
+    getButtonsInfo: function getButtonsInfo() {
       var _this2 = this;
 
       this.videos.map(function (x) {
+        _this2.workoutsInfo.map(function (y) {
+          if (x.id == y.id) {
+            _this2.buttonsInfo.push(y);
+          }
+        });
+      });
+    },
+    getButtons: function getButtons() {
+      var _this3 = this;
+
+      var counter = 0;
+      this.videos.map(function (x) {
         var data = {
           id: "btn" + x.id,
-          name: "",
+          name: _this3.buttonsInfo[counter].name,
           active: false,
           completed: false
         };
+        counter++;
 
-        _this2.buttons.push(data);
+        _this3.buttons.push(data);
       });
     },
     pick: function pick(id) {
@@ -2219,7 +2246,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     empezar: function empezar() {
-      var videos = document.getElementsByTagName('video');
+      var videos = document.getElementsByTagName("video");
       videos[0].play();
       videos[0].loop = true;
       this.buttons[0].completed = true;
@@ -38295,7 +38322,11 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("router-view", {
-    attrs: { user: _vm.user, workouts: _vm.workouts },
+    attrs: {
+      user: _vm.user,
+      workouts: _vm.workouts,
+      workoutsInfo: _vm.workoutsInfo
+    },
     on: {
       "setWork-Data": _vm.setWorkOutData,
       "change-month": _vm.setMonth,
@@ -38757,9 +38788,7 @@ var render = function() {
                 }
               },
               [
-                _vm._v(
-                  "\n        Click me " + _vm._s(button.id) + "\n        "
-                ),
+                _vm._v("\n        " + _vm._s(button.name) + "\n        "),
                 _vm._m(0, true)
               ]
             )

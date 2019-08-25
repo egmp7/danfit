@@ -2,6 +2,7 @@
   <router-view
     v-bind:user="user"
     v-bind:workouts="workouts"
+    v-bind:workoutsInfo="workoutsInfo"
     v-on:setWork-Data="setWorkOutData"
     v-on:change-month="setMonth"
     v-on:save-workout="saveWorkout"
@@ -29,14 +30,15 @@ export default {
     return {
       user: {},
       workouts: {
-        workOutData:'1,2,3,4,5,6,7,8,9'
+        workOutData: "1,2,3,4,5,6,7,8,9" //TESTING PURPOSES
       },
-      location:'http://danfit.local/dashboard/'
+      workoutsInfo: {}
     };
   },
   created() {
     this.fetchUserData();
     this.fetchWorkoutsData();
+    this.fetchWorkoutsInfo();
   },
   methods: {
     // ********************************************************************
@@ -58,7 +60,7 @@ export default {
               res.data.progress,
               this.getNWorkout(res.data)
             ),
-            calendar: this.setMonth(this.getNWorkout(res.data).month, res.data),
+            calendar: this.setMonth(this.getNWorkout(res.data).month, res.data)
           };
         });
     },
@@ -71,6 +73,13 @@ export default {
             next: this.getWorkOutInfo(res.data, this.user.nWorkout),
             workOutData: ""
           };
+        });
+    },
+    fetchWorkoutsInfo() {
+      fetch("../api/workouts_info/")
+        .then(res => res.json())
+        .then(res => {
+          this.workoutsInfo = res.data;
         });
     },
     // ********************************************************************
@@ -163,33 +172,30 @@ export default {
       return data;
     },
     setWorkOutData(data) {
-      
       this.workouts.workOutData = data.workout;
-      this.user.nWorkout={
+      this.user.nWorkout = {
         type: data.type,
-        month:data.month,
+        month: data.month,
         day: data.day
-      }
+      };
     },
     // ********************************************************************
     //    SAVE DATA
     // ********************************************************************
-    saveWorkout(data){
-      if (data.day !== undefined){
-        fetch("../api/user_data/" + this.userId(),{
-          method: 'post',
+    saveWorkout(data) {
+      if (data.day !== undefined) {
+        fetch("../api/user_data/" + this.userId(), {
+          method: "post",
           body: JSON.stringify(data),
-          headers:{
-            'content-type':'application/json'
+          headers: {
+            "content-type": "application/json"
           }
         })
-        .then(res => res.json())
-        .then(data =>{
-          data.type ='',
-          data.month='',
-          data.day=''
-          alert('progress saved');
-        })
+          .then(res => res.json())
+          .then(data => {
+            (data.type = ""), (data.month = ""), (data.day = "");
+            alert("progress saved");
+          });
       }
     }
   }

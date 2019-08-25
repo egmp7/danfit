@@ -23,7 +23,7 @@
           class="buttons btn"
           @click="pick(button.id)"
         >
-          Click me {{button.id}}
+          {{button.name}}
           <span>
             <i class="fas fa-check-circle"></i>
           </span>
@@ -42,16 +42,18 @@
 </template>
 <script>
 export default {
-  props: ["workouts", "user"],
+  props: ["workouts", "user", "workoutsInfo"],
   data() {
     return {
       videos: [],
+      buttonsInfo: [],
       buttons: [],
       saveWorkout: {}
     };
   },
   created() {
     this.getVideos(this.workouts.workOutData);
+    this.getButtonsInfo();
     this.getButtons();
   },
   methods: {
@@ -77,14 +79,25 @@ export default {
         }
       });
     },
+    getButtonsInfo() {
+      this.videos.map(x => {
+        this.workoutsInfo.map(y => {
+          if (x.id == y.id) {
+            this.buttonsInfo.push(y);
+          }
+        });
+      });
+    },
     getButtons() {
+      let counter = 0;
       this.videos.map(x => {
         let data = {
           id: "btn" + x.id,
-          name: "",
+          name: this.buttonsInfo[counter].name,
           active: false,
           completed: false
         };
+        counter++;
         this.buttons.push(data);
       });
     },
@@ -112,11 +125,11 @@ export default {
         }
       });
     },
-    empezar(){
-        let videos = document.getElementsByTagName('video')
-        videos[0].play()
-        videos[0].loop=true
-        this.buttons[0].completed =true
+    empezar() {
+      let videos = document.getElementsByTagName("video");
+      videos[0].play();
+      videos[0].loop = true;
+      this.buttons[0].completed = true;
     },
     check() {
       let data = this.user.nWorkout;

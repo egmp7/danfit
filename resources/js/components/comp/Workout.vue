@@ -19,7 +19,7 @@
       <div v-for="button in buttons" v-bind:key="button.id">
         <button
           v-bind:id="button.id"
-          v-bind:class="{'completed':button.completed}"
+          v-bind:class="{'completed':button.completed,'title':button.title}"
           class="buttons btn"
           @click="pick(button.id)"
         >
@@ -52,54 +52,63 @@ export default {
     };
   },
   created() {
-    this.getVideos(this.workouts.workOutData);
-    this.getButtonsInfo();
+    this.getVideos();
     this.getButtons();
   },
   methods: {
-    getVideos(workOutData) {
+    getVideos() {
       let counter = 0;
-      workOutData = workOutData.split(",");
+      let workOutData = this.workouts.workOutData.split(",");
 
       workOutData.map(x => {
         let video = {};
-        if (counter == 0) {
-          video = {
-            id: x,
-            show: true
-          };
-          counter++;
-          this.videos.push(video);
-        } else {
-          video = {
-            id: x,
-            show: false
-          };
-          this.videos.push(video);
+        if (!isNaN(parseInt(x))) {
+          if (counter == 0) {
+            video = {
+              id: x,
+              show: true
+            };
+            counter++;
+            this.videos.push(video);
+          } else {
+            video = {
+              id: x,
+              show: false
+            };
+            this.videos.push(video);
+          }
         }
       });
     },
-    getButtonsInfo() {
-      this.videos.map(x => {
-        this.workoutsInfo.map(y => {
-          if (x.id == y.id) {
-            this.buttonsInfo.push(y);
-          }
-        });
+
+    getButtons() {
+      let workOutData = this.workouts.workOutData.split(",");
+      let data = {};
+      workOutData.map(x => {
+        if (isNaN(parseInt(x))) {
+          data = {
+            title: true,
+            name: x
+          };
+          this.buttons.push(data);
+        } else {
+          data = {
+            id: "btn" + x,
+            name: this.getButtonName(x),
+            completed: false
+          };
+          this.buttons.push(data);
+        }
       });
     },
-    getButtons() {
-      let counter = 0;
-      this.videos.map(x => {
-        let data = {
-          id: "btn" + x.id,
-          name: this.buttonsInfo[counter].name,
-          active: false,
-          completed: false
-        };
-        counter++;
-        this.buttons.push(data);
+    getButtonName(id) {
+      let data = null;
+      this.workoutsInfo.map(x => {
+        if (x.id == id) {
+          data = x.name;
+        }
       });
+      return data;
     },
     pick(id) {
       let videoId = parseInt(id.match(/\d+/g));
@@ -167,6 +176,11 @@ video {
   border-radius: 3px;
   height: 35vh;
   overflow: scroll;
+}
+.title {
+  background: #3490dc !important;
+  color: white !important;
+  box-shadow: none !important;
 }
 .buttons {
   background: #c7e5ff;

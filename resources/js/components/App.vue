@@ -172,7 +172,7 @@ export default {
       return data;
     },
     setWorkOutData(data) {
-      this.workouts.workOutData = data.workout;
+      this.workouts.workOutData = data;
       this.user.nWorkout = {
         type: data.type,
         month: data.month,

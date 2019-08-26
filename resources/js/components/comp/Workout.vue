@@ -1,19 +1,16 @@
 <template>
-  <div>
-    <h2>WORKOUT</h2>
+  <div class="workout">
+    <h2>{{workouts.workOutData.name}}</h2>
     <div v-for="video in videos" v-bind:key="video.id">
       <video width="320" height="200" v-bind:id="video.id" v-bind:class="{'show':video.show}">
-        <source v-bind:src="'/../storage/workouts/'+video.id+'.mp4'" type="video/mp4" />
+        <source v-bind:src="'/../storage/workouts/'+video.videoId+'.mp4'" type="video/mp4" />
       </video>
     </div>
+    <div class="exerciseInfo">
+      <h3>{{exerciseInfo}}</h3>
+    </div>
     <div class="action">
-      <button @click="empezar()" class="top btn btn-primary">Empezar!</button>
-      <a href="/">
-        <button
-          @click="check(),$emit('save-workout',saveWorkout)"
-          class="btn btn-success top"
-        >Finalizado!</button>
-      </a>
+      <button id="start" @click="empezar()" class="btn btn-primary btn-block">Empezar!</button>
     </div>
     <div class="wrap">
       <div v-for="button in buttons" v-bind:key="button.id">
@@ -33,9 +30,9 @@
     <div class="action">
       <a href="/">
         <button
-          @click="check(),$emit('save-workout',saveWorkout)"
+          @click="checkToSave(),$emit('save-workout',saveWorkout)"
           class="btn btn-success btn-block"
-        >Finalizado!</button>
+        >Finalizar!</button>
       </a>
     </div>
   </div>
@@ -47,55 +44,53 @@ export default {
     return {
       videos: [],
       buttonsInfo: [],
+      exerciseInfo: "",
       buttons: [],
       saveWorkout: {}
     };
   },
   created() {
-    this.getVideos();
     this.getButtons();
   },
   methods: {
-    getVideos() {
-      let counter = 0;
-      let workOutData = this.workouts.workOutData.split(",");
-
-      workOutData.map(x => {
-        let video = {};
-        if (!isNaN(parseInt(x))) {
-          if (counter == 0) {
-            video = {
-              id: x,
-              show: true
-            };
-            counter++;
-            this.videos.push(video);
-          } else {
-            video = {
-              id: x,
-              show: false
-            };
-            this.videos.push(video);
-          }
-        }
-      });
-    },
-
     getButtons() {
-      let workOutData = this.workouts.workOutData.split(",");
+      let workOutData = this.workouts.workOutData.workout.split(",");
       let data = {};
+      let counter = 0;
+      let regex1 = /^i/;
+      let regex2 = /^o/;
       workOutData.map(x => {
-        if (isNaN(parseInt(x))) {
+        // IF VIDEO
+        if (!isNaN(parseInt(x))) {
+          data = {
+            id: "btn" + counter,
+            name: this.getButtonName(x),
+            completed: false
+          };
+          this.buttons.push(data);
+          this.getVideo(x, counter);
+          counter++;
+        }
+        //IF VIDEO (OPTIONAL)
+        else if (regex2.test(x)) {
+          data = {
+            id: "btn" + counter,
+            name: this.getButtonName(x.replace("o ", "")) + " (opcional)",
+            completed: false
+          };
+          this.buttons.push(data);
+          this.getVideo(x.replace("o ", ""), counter);
+          counter++;
+        }
+        //IF INFO
+        else if (regex1.test(x)) {
+          this.buttonsInfo.push(x.replace("i ", ""));
+        }
+        //IF BUTTON TITLE
+        else {
           data = {
             title: true,
             name: x
-          };
-          this.buttons.push(data);
-        } else {
-          data = {
-            id: "btn" + x,
-            name: this.getButtonName(x),
-            completed: false
           };
           this.buttons.push(data);
         }
@@ -110,8 +105,31 @@ export default {
       });
       return data;
     },
+    getVideo(videoId, id) {
+      let video = {};
+      if (id == 0) {
+        video = {
+          id: id,
+          videoId: videoId,
+          show: true
+        };
+        this.videos.push(video);
+      } else {
+        video = {
+          id: id,
+          videoId: videoId,
+          show: false
+        };
+        this.videos.push(video);
+      }
+    },
+    infoExercise(id) {
+      this.exerciseInfo = this.buttonsInfo[id];
+    },
     pick(id) {
       let videoId = parseInt(id.match(/\d+/g));
+      this.infoExercise(videoId);
+
       //PLAY VIDEO AND SHOW
       this.videos.map(x => {
         if (x.id == videoId) {
@@ -133,14 +151,18 @@ export default {
           x.completed = true;
         }
       });
+      // HIDE START BUTTON
+      document.getElementById("start").style.display = "none";
     },
     empezar() {
       let videos = document.getElementsByTagName("video");
       videos[0].play();
       videos[0].loop = true;
-      this.buttons[0].completed = true;
+      this.infoExercise(0);
+      this.buttons[1].completed = true;
+      document.getElementById("start").style.display = "none";
     },
-    check() {
+    checkToSave() {
       let data = this.user.nWorkout;
       let exists = false;
       //CHECK IF PROGRESS ELEMENT EXISTS
@@ -158,9 +180,13 @@ export default {
 </script>
 
 <style scoped>
-h2 {
-  margin-bottom: 0;
+.workout h2 {
+  font-size: 28px;
+  margin-bottom: 5px;
   margin-top: 10px;
+}
+.workout h3 {
+  font-size: 24px;
 }
 video {
   display: none !important;
@@ -170,6 +196,11 @@ video {
 }
 .show {
   display: block !important;
+}
+.exerciseInfo {
+  text-align: center;
+  position: relative;
+  top: -8px;
 }
 .wrap {
   border: solid #5ea6e4 3px;
@@ -206,8 +237,5 @@ video {
 
 .action .btn {
   margin: 10px 0;
-}
-.action .top {
-  margin-top: 0;
 }
 </style>

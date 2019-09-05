@@ -20,6 +20,7 @@ class Data extends JsonResource
             'type'=> $this->type,
             'user_image' => $this->user_image,
             'progress' => $this->progress,
+            'workouts' => $this->workouts
         ];
     }
     

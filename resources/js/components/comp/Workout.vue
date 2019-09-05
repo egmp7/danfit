@@ -205,7 +205,7 @@ video {
 .wrap {
   border: solid #5ea6e4 3px;
   border-radius: 3px;
-  height: 35vh;
+  max-height: 35vh;
   overflow: scroll;
 }
 .title {

@@ -13,7 +13,7 @@
 import Navbar from "./inc/Navbar";
 import Calendario from "./comp/Calendario";
 import Configuracion from "./comp/Configuracion";
-import Tipo from "./comp/Tipo";
+import Programa from "./comp/Programa";
 import User from "./comp/User";
 import Workout from "./comp/Workout";
 

@@ -8,7 +8,7 @@
                 <p>DASHBOARD</p>
             </div>
         </router-link>
-        <router-link to="/tipo">
+        <router-link to="/programa">
             <div class="element">
                 <i class="fas fa-dumbbell fa-2x"></i>
                 <p>PROGRAMA</p>

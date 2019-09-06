@@ -10,7 +10,7 @@
       <h3>{{exerciseInfo}}</h3>
     </div>
     <div class="action">
-      <button id="start" @click="empezar()" class="btn btn-primary btn-block">Empezar!</button>
+      <button id="start" @click="empezar()" class="btn btn-success btn-block">Empezar!</button>
     </div>
     <div class="wrap">
       <div v-for="button in buttons" v-bind:key="button.id">
@@ -27,19 +27,11 @@
         </button>
       </div>
     </div>
-    <div class="action">
-      <a href="/">
-        <button
-          @click="checkToSave(),$emit('save-workout',saveWorkout)"
-          class="btn btn-success btn-block"
-        >Finalizar!</button>
-      </a>
-    </div>
   </div>
 </template>
 <script>
 export default {
-  props: ["workouts", "user", "workoutsInfo"],
+  props: ["workouts", "user"],
   data() {
     return {
       videos: [],
@@ -98,7 +90,7 @@ export default {
     },
     getButtonName(id) {
       let data = null;
-      this.workoutsInfo.map(x => {
+      this.workouts.workoutsInfo.map(x => {
         if (x.id == id) {
           data = x.name;
         }
@@ -214,7 +206,7 @@ video {
   box-shadow: none !important;
 }
 .buttons {
-  background: #c7e5ff;
+  background: #e6f3ff;
   border-bottom: solid #75b6ef 1px;
   width: 100%;
   border-radius: 0;

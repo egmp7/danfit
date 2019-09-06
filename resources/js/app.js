@@ -36,7 +36,7 @@ Vue.use(VueRouter)
 const routes = [
     { path: '/', component: require('./components/comp/User.vue').default},
     { path: '/programa', component: require('./components/comp/Programa.vue').default },
-    { path: '/calendario', component: require('./components/comp/Calendario.vue').default },
+    { path: '/workouts', component: require('./components/comp/Workouts.vue').default },
     { path: '/configuracion', component: require('./components/comp/Configuracion.vue').default },
     { path: '/workout', component: require('./components/comp/Workout.vue').default }
 

@@ -10651,6 +10651,8 @@ a.text-dark:focus {
 * h2 {
   font-size: 24px;
   text-align: center;
+  margin-top: 5px;
+  color: #26588e;
 }
 
 * .alert {
@@ -10666,7 +10668,16 @@ a.text-dark:focus {
   padding-bottom: 60px;
 }
 
-#navbar img {
+* a {
+  color: #c2e3ff;
+}
+
+* a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+#navbar .block .logo img {
   width: 100px;
   margin: 8px 0;
 }
@@ -10674,10 +10685,12 @@ a.text-dark:focus {
 #navbar .menu {
   display: flex;
   overflow: scroll;
+  background: #1369b7;
+  border-radius: 10px;
 }
 
 #navbar .menu .element {
-  background: #eaeaea;
+  background: #1369b7;
   text-align: center;
   margin-right: 8px;
   padding: 5px;
@@ -10713,20 +10726,42 @@ footer p {
 ************************************************/
 
 #user {
+  background: #d5ebff;
+  border-radius: 10px;
+  margin: 20px 0;
+  padding: 20px 10px;
   margin: 10px 0;
 }
 
-#user .col-3 {
-  padding-right: 0;
+#user .block {
+  position: relative;
 }
 
-#user img {
+#user .block img {
   width: 22vw;
   height: 22vw;
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 50%;
-  border: solid #c3c3c3 4px;
+  border: solid #8fc1ec 2px;
+  max-width: 70px;
+  max-height: 70px;
+}
+
+#user .block .text {
+  position: absolute;
+  display: block;
+  left: 90px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#user .block .text p {
+  margin: 0;
+}
+
+#user .col-3 {
+  padding-right: 0;
 }
 
 #user .user-info p {
@@ -10746,12 +10781,16 @@ footer p {
 
 #today img {
   width: 100%;
+  margin: 0 auto;
   margin-bottom: 10px;
+  max-width: 300px;
+  display: block;
 }
 
 #today h2 {
   font-size: 24px;
   text-align: center;
+  color: #2f2f5f;
 }
 
 #today h3 {
@@ -10762,6 +10801,13 @@ footer p {
 /************************************************
     PROGRAMA
 ************************************************/
+
+#programa {
+  background: #d5ebff;
+  border-radius: 10px;
+  margin: 20px 0;
+  padding: 20px 10px;
+}
 
 #programa img {
   display: block;
@@ -10810,7 +10856,7 @@ footer p {
      object-fit: cover;
   border-radius: 50%;
   margin: 20px auto;
-  border: solid #c3c3c3 5px;
+  border: solid #8fc1ec 5px;
 }
 
 #config p {
@@ -10829,5 +10875,23 @@ footer p {
   height: 45px;
   width: 100%;
   opacity: 0;
+}
+
+/************************************************
+    WORKOUTS
+************************************************/
+
+#workouts {
+  background: #d5ebff;
+  border-radius: 10px;
+  margin: 20px 0;
+  padding: 20px 10px;
+}
+
+.workout {
+  background: #d5ebff;
+  border-radius: 10px;
+  margin: 20px 0;
+  padding: 20px 10px;
 }
 

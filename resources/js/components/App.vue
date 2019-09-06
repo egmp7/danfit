@@ -1,17 +1,18 @@
 <template>
-  <router-view
-    v-bind:user="user"
-    v-bind:workouts="workouts"
-    v-bind:workoutsInfo="workoutsInfo"
-    v-on:setWork-Data="setWorkOutData"
-    v-on:change-month="setMonth"
-    v-on:save-workout="saveWorkout"
-  ></router-view>
+  <div>
+    <navbar v-bind:user="user"></navbar>
+    <router-view
+      v-bind:user="user"
+      v-bind:workouts="workouts"
+      v-on:setWork-Data="setWorkOutData"
+      v-on:save-workout="saveWorkout"
+    ></router-view>
+  </div>
 </template>
 
 <script>
 import Navbar from "./inc/Navbar";
-import Calendario from "./comp/Calendario";
+import Workouts from "./comp/Workouts";
 import Configuracion from "./comp/Configuracion";
 import Programa from "./comp/Programa";
 import User from "./comp/User";
@@ -23,46 +24,37 @@ export default {
     Navbar,
     User,
     Configuracion,
-    Calendario,
+    Workouts,
     Workout
   },
   data() {
     return {
       user: {},
-      workouts: {
-        workOutData: "1,2,3,4,5,6,7,8,9" //TESTING PURPOSES
-      },
-      workoutsInfo: {}
+      workouts: {}
     };
   },
   created() {
     this.fetchUserData();
-    this.fetchWorkoutsData();
-    this.fetchWorkoutsInfo();
   },
   methods: {
     // ********************************************************************
     //    GET DATA
     // ********************************************************************
-
-    userId() {
-      var id = window.location.pathname.slice(11);
-      return id;
-    },
     fetchUserData() {
       fetch("../api/user_data/" + this.userId())
         .then(res => res.json())
         .then(res => {
           this.user = {
-            main: res.data,
-            nWorkout: this.getNWorkout(res.data),
-            progressBar: this.getProgressBar(
-              res.data.progress,
-              this.getNWorkout(res.data)
-            ),
-            calendar: this.setMonth(this.getNWorkout(res.data).month, res.data)
+            api: res.data,
+            program: "",
+            today: ""
           };
+          this.fetchWorkoutsData();
         });
+    },
+    userId() {
+      var id = window.location.pathname.slice(11);
+      return id;
     },
     fetchWorkoutsData() {
       fetch("../api/workouts/")
@@ -70,114 +62,110 @@ export default {
         .then(res => {
           this.workouts = {
             all: res.data,
-            next: this.getWorkOutInfo(res.data, this.user.nWorkout),
-            workOutData: ""
+            workOutData: "",
+            workoutsInfo: ""
           };
+          this.fetchWorkoutsInfoData();
         });
     },
-    fetchWorkoutsInfo() {
+    fetchWorkoutsInfoData() {
+      let data = "";
       fetch("../api/workouts_info/")
         .then(res => res.json())
         .then(res => {
-          this.workoutsInfo = res.data;
+          data = res.data;
+          this.workouts.workoutsInfo = res.data;
         });
+      this.getUserProgram(this.user.api.workouts.split(","), this.workouts.all);
+    },
+    getUserProgram(userProgram, allWorkouts) {
+      let program = [];
+      let data = "";
+      let day = "";
+      let counter = 0;
+      userProgram.map(x => {
+        //  PICK DAY
+        switch (counter) {
+          case 0:
+            day = "Lunes";
+            break;
+          case 1:
+            day = "Martes";
+            break;
+          case 2:
+            day = "Miércoles";
+            break;
+          case 3:
+            day = "Jueves";
+            break;
+          case 4:
+            day = "Viernes";
+            break;
+          case 5:
+            day = "Sábado";
+            break;
+          case 6:
+            day = "Domingo";
+            break;
+        }
+        counter++;
+        if (isNaN(parseInt(x))) {
+          data = {
+            day: day,
+            workout: {
+              name: "Descanso",
+              description:
+                "Relaja los músculos, come suficiente proteína para regeneral pronto los músculos"
+            },
+            active: false
+          };
+          program.push(data);
+        } else {
+          allWorkouts.map(y => {
+            if (y.id == x) {
+              data = {
+                day: day,
+                workout: y,
+                active: true
+              };
+              program.push(data);
+            }
+          });
+        }
+      });
+      this.user.program = program;
+      this.getTodayProgram();
+    },
+    getTodayProgram() {
+
+      var d = new Date();
+      var weekday = new Array(7);
+      weekday[0] = "Domingo";
+      weekday[1] = "Lunes";
+      weekday[2] = "Martes";
+      weekday[3] = "Miércoles";
+      weekday[4] = "Jueves";
+      weekday[5] = "Viernes";
+      weekday[6] = "Sabado";
+
+      var day = weekday[d.getDay()];
+      this.user.program.map(x =>{
+        if(x.day == day){
+          this.user.today = x;
+          this.workouts.workOutData =x.workout;
+        }
+      })
     },
     // ********************************************************************
     //    USER OBJECT
     // ********************************************************************
-    getNWorkout(userData) {
-      if (userData.progress.length > 0) {
-        //  LATEST RECORD OF USER PROGRESS
-        let lProgress = userData.progress[userData.progress.length - 1];
-        //LOGIC FOR nWorkout DAYS AND MONTHS
-        if (lProgress.day < 28) {
-          return {
-            type: userData.type,
-            month: lProgress.month,
-            day: lProgress.day + 1
-          };
-        } else {
-          return {
-            type: userData.type,
-            month: lProgress.month + 1,
-            day: 1
-          };
-        }
-      } else {
-        return {
-          type: userData.type,
-          month: 1,
-          day: 1
-        };
-      }
-    },
-    getProgressBar(progress, nWorkout) {
-      let counter = 0;
-      progress.map(x => {
-        if (x.month == nWorkout.month && x.type == nWorkout.type) {
-          counter++;
-        }
-      });
-      return (counter / 28) * 100;
-    },
-    getProgressDays(user, monthAndType) {
-      let daysCompleted = [];
-      let days = [];
-      user.map(x => {
-        if (x.month == monthAndType.month && x.type == monthAndType.type) {
-          daysCompleted.push(x.day);
-        }
-      });
-      for (let i = 1; i < 29; i++) {
-        let data = {};
-        if (daysCompleted.includes(i)) {
-          data.day = i;
-          data.completed = true;
-          days.push(data);
-        } else {
-          data.day = i;
-          data.completed = false;
-          days.push(data);
-        }
-      }
-      return days;
-    },
-    setMonth(month, user) {
-      let monthAndType = {
-        month: month,
-        type: user.type
-      };
-      let data = {
-        month: month,
-        days: this.getProgressDays(user.progress, monthAndType)
-      };
-      this.user.calendar = data;
-      return data;
-    },
+
     // ********************************************************************
     //    WORKOUTS OBJECT
     // ********************************************************************
 
-    getWorkOutInfo(workouts, nWorkout) {
-      let data = null;
-      workouts.map(x => {
-        if (
-          x.type == nWorkout.type &&
-          x.month == nWorkout.month &&
-          x.day == nWorkout.day
-        ) {
-          data = x;
-        }
-      });
-      return data;
-    },
     setWorkOutData(data) {
       this.workouts.workOutData = data;
-      this.user.nWorkout = {
-        type: data.type,
-        month: data.month,
-        day: data.day
-      };
     },
     // ********************************************************************
     //    SAVE DATA
